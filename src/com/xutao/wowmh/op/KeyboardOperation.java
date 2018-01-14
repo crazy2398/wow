@@ -10,6 +10,7 @@ public class KeyboardOperation extends Press {
 	}
 
 	public static final int PRINT_SCREEN = 44;
+	public static final int ESC = 27;
 
 	public void shift(int key) {
 		keyDown(SHIFT);
@@ -39,5 +40,9 @@ public class KeyboardOperation extends Press {
 
 	public void printScreen() {
 		keyPress(PRINT_SCREEN);
+	}
+	
+	public void escape() {
+		keyPress(ESC);
 	}
 }

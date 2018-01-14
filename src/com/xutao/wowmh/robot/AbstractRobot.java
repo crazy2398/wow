@@ -1,6 +1,10 @@
 package com.xutao.wowmh.robot;
 
+import java.awt.Point;
 import java.util.concurrent.TimeUnit;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import com.xnx3.bean.ActiveBean;
 import com.xnx3.microsoft.Color;
@@ -8,11 +12,14 @@ import com.xnx3.microsoft.File;
 import com.xnx3.microsoft.Mouse;
 import com.xnx3.microsoft.Sleep;
 import com.xnx3.microsoft.SystemUtil;
+import com.xnx3.microsoft.Tts;
 import com.xnx3.microsoft.Window;
 import com.xutao.wowmh.core.ComWrapper;
+import com.xutao.wowmh.op.FindPicOperation;
 import com.xutao.wowmh.op.KeyboardOperation;
 
 public class AbstractRobot {
+	private static final Logger logger = LogManager.getLogger(AbstractRobot.class);
 	private final ComWrapper com;
 
 	private final Sleep sleep = new Sleep(); // 延迟等待类
@@ -77,6 +84,12 @@ public class AbstractRobot {
 		}
 		beep(code.length, flag);
 	}
+
+	public void beep(String msg, int... code) {
+		beep(code);
+		Tts tts=new Tts(com.getActiveXComponent());
+		tts.speak(msg);
+	}
 	
 	public Window getWindowOp() {
 		return com.getWindowOp();
@@ -101,8 +114,58 @@ public class AbstractRobot {
 	public File getFileOp() {
 		return com.getFileOp();
 	}
-	
+
+	public FindPicOperation getFindPicOp() {
+		return com.getFindPicOp();
+	}
+
 	public ActiveBean getActiveXComponent() {
 		return com.getActiveXComponent();
+	}
+
+	/**
+	 * 根据查找图片的结果，如果找到图片则点击
+	 * 
+	 * @param result
+	 *            <li>int[0]:是否找到，没找到返回-1
+	 *            <li>int[1]:找到的图像的x坐标
+	 *            <li>int[2]:找到的图像的y坐标
+	 * 
+	 * @return 如果执行了点击动作，返回true,否则是false
+	 */
+	public boolean clickPictureIfFound(int[] result) {
+		if (isPicFound(result) && result.length >= 3) {
+			getMouseOp().mouseMoveTo(result[1] + 5, result[2] + 5);
+			getMouseOp().mouseClick(true);
+			return true;
+		}
+		return false;
+	}
+	
+	public void clickPoint(Point p, boolean isLeftClick) {
+		getMouseOp().mouseMoveTo(p.x, p.y);
+		sleep(50);
+		getMouseOp().mouseClick(isLeftClick);
+		sleep(200);
+	}
+
+	/** 在一个长方形范围内查找图片 */
+	public boolean isPicFound(int[] result) {
+		return result != null && result.length >= 1 && result[0] >= 0;
+	}
+
+	/** 是否位于等待选择游戏角色的界面状态 */
+	public boolean isWaitingRoleSelect() {
+		return isPicFound(getFindPicOp().findPicByIndex("选择服务器.bmp", 6, 12, 5));
+	}
+
+	/** 是否位于游戏中的界面状态 */
+	public boolean isPlaying() {
+		return isPicFound(getFindPicOp().findPicByIndex("工具栏装饰.bmp", 3, 12, 33));
+	}
+
+	/** 是否正在战斗 */
+	public boolean isFighting() {
+		return isPicFound(getFindPicOp().findPicByIndex("头像战斗中.bmp", 10, 8, 0));
 	}
 }
