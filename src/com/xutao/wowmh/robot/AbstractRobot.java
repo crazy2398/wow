@@ -9,7 +9,6 @@ import org.apache.logging.log4j.Logger;
 import com.xnx3.bean.ActiveBean;
 import com.xnx3.microsoft.Color;
 import com.xnx3.microsoft.File;
-import com.xnx3.microsoft.Mouse;
 import com.xnx3.microsoft.Sleep;
 import com.xnx3.microsoft.SystemUtil;
 import com.xnx3.microsoft.Tts;
@@ -17,6 +16,7 @@ import com.xnx3.microsoft.Window;
 import com.xutao.wowmh.core.ComWrapper;
 import com.xutao.wowmh.op.FindPicOperation;
 import com.xutao.wowmh.op.KeyboardOperation;
+import com.xutao.wowmh.op.MouseOperation;
 
 public class AbstractRobot {
 	private static final Logger logger = LogManager.getLogger(AbstractRobot.class);
@@ -87,10 +87,10 @@ public class AbstractRobot {
 
 	public void beep(String msg, int... code) {
 		beep(code);
-		Tts tts=new Tts(com.getActiveXComponent());
+		Tts tts = new Tts(com.getActiveXComponent());
 		tts.speak(msg);
 	}
-	
+
 	public Window getWindowOp() {
 		return com.getWindowOp();
 	}
@@ -99,7 +99,7 @@ public class AbstractRobot {
 		return com.getSystemUtilOp();
 	}
 
-	public Mouse getMouseOp() {
+	public MouseOperation getMouseOp() {
 		return com.getMouseOp();
 	}
 
@@ -135,18 +135,14 @@ public class AbstractRobot {
 	 */
 	public boolean clickPictureIfFound(int[] result) {
 		if (isPicFound(result) && result.length >= 3) {
-			getMouseOp().mouseMoveTo(result[1] + 5, result[2] + 5);
-			getMouseOp().mouseClick(true);
-			return true;
+			return getMouseOp().mouseClick(result[1] + 1, result[2] + 1, true);
 		}
+		logger.debug("没有找到图片");
 		return false;
 	}
-	
+
 	public void clickPoint(Point p, boolean isLeftClick) {
-		getMouseOp().mouseMoveTo(p.x, p.y);
-		sleep(50);
-		getMouseOp().mouseClick(isLeftClick);
-		sleep(200);
+		getMouseOp().mouseClick(p, isLeftClick);
 	}
 
 	/** 在一个长方形范围内查找图片 */

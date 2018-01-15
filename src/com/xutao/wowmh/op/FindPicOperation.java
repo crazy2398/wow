@@ -2,6 +2,7 @@ package com.xutao.wowmh.op;
 
 import java.awt.Rectangle;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -10,6 +11,8 @@ import com.xutao.wowmh.core.ComWrapper;
 import com.xutao.wowmh.core.PixelPoint;
 
 public class FindPicOperation extends FindPic {
+	private static final double SIMULATE_RATE = 0.8;
+
 	private static final Logger logger = LogManager.getLogger(FindPicOperation.class);
 
 	private final ComWrapper com;
@@ -50,7 +53,8 @@ public class FindPicOperation extends FindPic {
 	public int[] findPic(int xStart, int yStart, int xEnd, int yEnd, String pic, String deviationColor, double sim, int order) {
 
 		if (logger.isDebugEnabled()) {
-			com.getPrintScreen().capture(xStart, yStart, xEnd, yEnd);
+			String name = StringUtils.split(pic, ".")[0];
+			com.getPrintScreen().capture(name, xStart, yStart, xEnd, yEnd);
 		}
 		return super.findPic(xStart, yStart, xEnd, yEnd, pic, deviationColor, sim, order);
 	}
@@ -59,7 +63,7 @@ public class FindPicOperation extends FindPic {
 	public int[] findPicCenter(String bmp, int xOffset, int yOffset, int mode) {
 		int centerX = java.awt.Toolkit.getDefaultToolkit().getScreenSize().width / 2;
 		int centerY = java.awt.Toolkit.getDefaultToolkit().getScreenSize().height / 2;
-		return this.findPic(centerX - xOffset, centerY - yOffset, centerX + xOffset, centerY + yOffset, bmp, "000000", 0.9, mode);
+		return this.findPic(centerX - xOffset, centerY - yOffset, centerX + xOffset, centerY + yOffset, bmp, "000000", SIMULATE_RATE, mode);
 	}
 
 	/** 已默认方式从屏幕中央找图 */
@@ -94,7 +98,7 @@ public class FindPicOperation extends FindPic {
 			throw new IllegalArgumentException("xCount/yCount必须是有效地的等分数。 大于等于零，并小于其方向的像素数");
 		}
 		int x = index % xCount;
-		int y = new Double(Math.floor(index / yCount)).intValue();
+		int y = (index - x) / xCount; // new Double(Math.floor(index / yCount)).intValue();
 
 		int xOffset = width / xCount;
 
@@ -107,11 +111,11 @@ public class FindPicOperation extends FindPic {
 
 	/** 在一个指定起点和长宽的范围内查找图片 */
 	public int[] findPicByOffset(String bmp, PixelPoint original, int areaWidth, int areaHeight) {
-		return this.findPic(original.x, original.y, original.x + areaWidth, original.y + areaHeight, bmp, "000000", 0.9, 0);
+		return this.findPic(original.x, original.y, original.x + areaWidth, original.y + areaHeight, bmp, "000000", SIMULATE_RATE, 0);
 	}
 
 	/** 在一个长方形范围内查找图片 */
 	public int[] findPicByOffset(String bmp, Rectangle r) {
-		return this.findPic(r.x, r.y, r.x + r.width, r.y + r.height, bmp, "000000", 0.9, 0);
+		return this.findPic(r.x, r.y, r.x + r.width, r.y + r.height, bmp, "000000", SIMULATE_RATE, 0);
 	}
 }

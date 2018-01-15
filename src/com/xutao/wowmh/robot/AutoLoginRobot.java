@@ -178,7 +178,7 @@ public class AutoLoginRobot extends AbstractRobot {
 		boolean clicked = false;
 		if (isPlaying()) {
 			int retryCount = 5;
-			while (!(clicked = clickPictureIfFound(getFindPicOp().findPicCenter("返回角色选择.bmp", 100, 160))) && retryCount-- > 0) {
+			while (!(clicked = clickPictureIfFound(getFindPicOp().findPicCenter("退出游戏.bmp", 100, 160))) && retryCount-- > 0) {
 				getKeyboardOp().escape();
 				sleep(500, TimeUnit.MILLISECONDS);
 			}

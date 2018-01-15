@@ -27,31 +27,38 @@ public class FindStrOperation extends FindStr {
 		this.dict = dict;
 	}
 
-
-	
 	/**
 	 * 在屏幕范围(x1,y1,x2,y2)内,查找string(可以是任意个字符串的组合),并返回找到的符合的坐标位置
-	 * 		<li>须提前设置好点阵字库 {@link Com#setDict(int, String)}
-	 * @param xStart 区域的左上X坐标
-	 * @param yStart 区域的左上Y坐标
-	 * @param xEnd 区域的右下X坐标
-	 * @param yEnd 区域的右下Y坐标
-	 * @param findString 待查找的字符串, 可以是字符串组合，比如"长安|洛阳|大雁塔",中间用"|"来分割字符串
-	 * @param colorFormat 颜色格式串，如  "FFFFFF-101010|555555-102030"
-	 * @param sim 相似度,取值范围0.1-1.0 , 一般情况下0.9即可。越大，查找的越精准，误差越小，速度越快
-	 * @param useDict 字库的序号，以此来设定使用哪个字库.   {@link Com#setDict(int, String)} 便是此设置的int序号
-	 * @return int[3]   <li>int[0]:是否查找到，若是没有则返回-1  
-	 * 					<li>int[1]查找到的文字的X的值，没有返回-1   
-	 * 					<li>int[2]查找到的文字的Y值，没有返回-1
+	 * <li>须提前设置好点阵字库 {@link Com#setDict(int, String)}
+	 * 
+	 * @param xStart
+	 *            区域的左上X坐标
+	 * @param yStart
+	 *            区域的左上Y坐标
+	 * @param xEnd
+	 *            区域的右下X坐标
+	 * @param yEnd
+	 *            区域的右下Y坐标
+	 * @param findString
+	 *            待查找的字符串, 可以是字符串组合，比如"长安|洛阳|大雁塔",中间用"|"来分割字符串
+	 * @param colorFormat
+	 *            颜色格式串，如 "FFFFFF-101010|555555-102030"
+	 * @param sim
+	 *            相似度,取值范围0.1-1.0 , 一般情况下0.9即可。越大，查找的越精准，误差越小，速度越快
+	 * @param useDict
+	 *            字库的序号，以此来设定使用哪个字库. {@link Com#setDict(int, String)} 便是此设置的int序号
+	 * @return int[3]
+	 *         <li>int[0]:是否查找到，若是没有则返回-1
+	 *         <li>int[1]查找到的文字的X的值，没有返回-1
+	 *         <li>int[2]查找到的文字的Y值，没有返回-1
 	 */
-	public int[] findStrE(int xStart, int yStart, int xEnd,int yEnd, String findString ,String colorFormat,double sim,int useDict ) {
+	public int[] findStrE(int xStart, int yStart, int xEnd, int yEnd, String findString, String colorFormat, double sim, int useDict) {
 		if (logger.isDebugEnabled()) {
-			com.getPrintScreen().capture(xStart, yStart, xEnd, yEnd);
+			com.getPrintScreen().capture(findString, xStart, yStart, xEnd, yEnd);
 		}
 		return super.findStrE(xStart, yStart, xEnd, yEnd, findString, colorFormat, sim, useDict);
 	}
-	
-	
+
 	/** 从屏幕中央找图 */
 	public int[] findStrCenter(String str, String color, int xOffset, int yOffset) {
 		int centerX = java.awt.Toolkit.getDefaultToolkit().getScreenSize().width / 2;
@@ -114,29 +121,38 @@ public class FindStrOperation extends FindStr {
 
 	/**
 	 * 指定区域内读取文字
-	 * 		<li>须提前设置好点阵字库 {@link Com#setDict(int, String)}
-	 * @param xStart 区域的左上X坐标
-	 * @param yStart 区域的左上Y坐标
-	 * @param xEnd 区域的右下X坐标
-	 * @param yEnd 区域的右下Y坐标
-	 * @param colorFormat 颜色格式串
-	 * 			<li>RGB单色识别:"9f2e3f-000000"
-	 * 			<li>RGB单色差色识别:"9f2e3f-030303"
-	 * 			<li>RGB多色识别(最多支持10种,每种颜色用"|"分割):"9f2e3f-030303|2d3f2f-000000|3f9e4d-100000"
-	 * 			<li>HSV多色识别(最多支持10种,每种颜色用"|"分割):"20.30.40-0.0.0|30.40.50-0.0.0"
-	 * 			<li>背景色识别:"b@ffffff-000000"
-	 * @param lineBreak 换行符，为空或者null则不使用换行符分割。读取的文字每行换行时会加上此字符串作为换行分割
-	 * @param sim 相似度,取值范围0.1-1.0 , 一般情况下0.9即可。越大，查找的越精准，误差越小，速度越快
-	 * @param useDict 字库的序号，以此来设定使用哪个字库.   {@link Com#setDict(int, String)} 便是此设置的int序号
+	 * <li>须提前设置好点阵字库 {@link Com#setDict(int, String)}
+	 * 
+	 * @param xStart
+	 *            区域的左上X坐标
+	 * @param yStart
+	 *            区域的左上Y坐标
+	 * @param xEnd
+	 *            区域的右下X坐标
+	 * @param yEnd
+	 *            区域的右下Y坐标
+	 * @param colorFormat
+	 *            颜色格式串
+	 *            <li>RGB单色识别:"9f2e3f-000000"
+	 *            <li>RGB单色差色识别:"9f2e3f-030303"
+	 *            <li>RGB多色识别(最多支持10种,每种颜色用"|"分割):"9f2e3f-030303|2d3f2f-000000|3f9e4d-100000"
+	 *            <li>HSV多色识别(最多支持10种,每种颜色用"|"分割):"20.30.40-0.0.0|30.40.50-0.0.0"
+	 *            <li>背景色识别:"b@ffffff-000000"
+	 * @param lineBreak
+	 *            换行符，为空或者null则不使用换行符分割。读取的文字每行换行时会加上此字符串作为换行分割
+	 * @param sim
+	 *            相似度,取值范围0.1-1.0 , 一般情况下0.9即可。越大，查找的越精准，误差越小，速度越快
+	 * @param useDict
+	 *            字库的序号，以此来设定使用哪个字库. {@link Com#setDict(int, String)} 便是此设置的int序号
 	 * @return String 若是没找到，返回null
 	 */
-	public String readStr(int xStart,int yStart,int xEnd,int yEnd,String colorFormat,String lineBreak, double sim,int useDict) {
+	public String readStr(int xStart, int yStart, int xEnd, int yEnd, String colorFormat, String lineBreak, double sim, int useDict) {
 		if (logger.isDebugEnabled()) {
-			com.getPrintScreen().capture(xStart, yStart, xEnd, yEnd);
+			com.getPrintScreen().capture(colorFormat, xStart, yStart, xEnd, yEnd);
 		}
 		return super.readStr(xStart, yStart, xEnd, yEnd, colorFormat, lineBreak, sim, useDict);
 	}
-	
+
 	public void setDict(int dict) {
 		this.dict = dict;
 	}

@@ -23,12 +23,17 @@ public class SelectRoleByLevelRobotTest {
 
 			List<Role> allRoles = roleRobot.getRoles(null, null, null, null);
 
-			for (Role r : allRoles) {
-				Point p = r.getScreenPosition();
-				com.getMouseOp().mouseClick(p.x, p.y, true);
-				roleRobot.sleep(1000);
-			}
+//			for (Role r : allRoles) {
+//				Point p = r.getScreenPosition();
+//				com.getMouseOp().mouseClick(p.x, p.y, true);
+//				roleRobot.sleep(1000);
+//			}
 
+			Assert.assertTrue(roleRobot.enterGame( allRoles.get(0)));
+	
+			
+			roleRobot.sleep(2000);
+			
 			loginRobot.exitGame();
 
 		}

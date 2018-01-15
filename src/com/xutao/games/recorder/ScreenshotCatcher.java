@@ -100,28 +100,40 @@ public class ScreenshotCatcher implements Closeable {
 		capture(screenRectangle);
 	}
 
-	public void capture(Rectangle r) {
-		saveScreenshot(robot.createScreenCapture(r));
+	public void capture(String title, Rectangle r) {
+		saveScreenshot(robot.createScreenCapture(r), title);
 	}
 
-	public void capture(int startX, int startY, int endX, int endY) {
+	public void capture(Rectangle r) {
+		saveScreenshot(robot.createScreenCapture(r), null);
+	}
+
+	public void capture(String title, int startX, int startY, int endX, int endY) {
 
 		int minX = Math.min(startX, endX);
 		int minY = Math.min(startY, endY);
 
 		Rectangle r = new Rectangle(minX, minY, Math.abs(startX - endX), Math.abs(startY - endY));
 
-		capture(r);
+		capture(title, r);
+	}
+
+	public void capture(int startX, int startY, int endX, int endY) {
+		capture(null, startX, startY, endX, endY);
 	}
 
 	public void capture(Point p, int w, int h) {
-		Rectangle r = new Rectangle(p, new Dimension(w, h));
-		capture(r);
+		capture(null, p, w, h);
 	}
 
-	private void saveScreenshot(BufferedImage image) {
+	public void capture(String title, Point p, int w, int h) {
+		Rectangle r = new Rectangle(p, new Dimension(w, h));
+		capture(title, r);
+	}
 
-		final File screenFile = new File(path + "\\" + sdf.format(new Date()) + "." + FORMAT);
+	private void saveScreenshot(BufferedImage image, String title) {
+
+		final File screenFile = new File(path + "\\" + (title == null ? "" : title + "-") + sdf.format(new Date()) + "." + FORMAT);
 
 		final Screenshot ss = new Screenshot(image, screenFile);
 

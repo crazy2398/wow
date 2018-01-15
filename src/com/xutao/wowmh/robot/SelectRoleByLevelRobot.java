@@ -1,7 +1,9 @@
 package com.xutao.wowmh.robot;
 
+import java.awt.Point;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -110,6 +112,35 @@ public class SelectRoleByLevelRobot extends AbstractRobot {
 		}
 
 		return r;
+
+	}
+
+	/** 登入系统 */
+	public boolean enterGame(Role role) {
+		Point p = role == null ? null : role.getScreenPosition();
+
+		if (null == p) {
+			logger.error("该角色没有发现锚点，无法进入游戏。");
+			return false;
+		}
+
+		getComWrapper().getMouseOp().leftClick(p, 1);
+		logger.info("已经选定等级[" + role.getLevel() + "]角色[" + role.getProfession() + "]");
+		sleep(500);
+
+		// if (getComWrapper().getMouseOp().doubleClick(p)) {
+		if (clickPictureIfFound(getFindPicOp().findPicByIndex("按钮.bmp", 3, 4, 10))) {
+
+			final int tryCount = 120;
+			for (int i = 0; i < tryCount && !isPlaying(); i++) {
+				logger.info("等待进入游戏[" + i + "/" + tryCount + "]");
+				sleep(1, TimeUnit.SECONDS);
+			}
+		} else {
+			logger.error("没有找到游戏按钮，无法进入游戏。");
+		}
+
+		return isPlaying();
 
 	}
 

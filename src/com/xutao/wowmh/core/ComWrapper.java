@@ -8,12 +8,12 @@ import org.apache.logging.log4j.Logger;
 import com.xnx3.microsoft.Color;
 import com.xnx3.microsoft.Com;
 import com.xnx3.microsoft.File;
-import com.xnx3.microsoft.Mouse;
 import com.xnx3.microsoft.SystemUtil;
 import com.xnx3.microsoft.Window;
 import com.xutao.games.recorder.ScreenshotCatcher;
 import com.xutao.wowmh.op.FindPicOperation;
 import com.xutao.wowmh.op.KeyboardOperation;
+import com.xutao.wowmh.op.MouseOperation;
 
 public class ComWrapper extends Com implements Closeable {
 	private static final Logger logger = LogManager.getLogger(ComWrapper.class);
@@ -28,7 +28,7 @@ public class ComWrapper extends Com implements Closeable {
 	private final SystemUtil systemUtilOp = new SystemUtil(this.getActiveXComponent());
 
 	/** 鼠标模拟操作类 */
-	private final Mouse mouseOp = new Mouse(this.getActiveXComponent());
+	private final MouseOperation mouseOp = new MouseOperation(this);
 
 	/** 键盘模拟操作类 */
 	private final KeyboardOperation keyboardOp = new KeyboardOperation(this.getActiveXComponent());
@@ -74,7 +74,7 @@ public class ComWrapper extends Com implements Closeable {
 		return systemUtilOp;
 	}
 
-	public Mouse getMouseOp() {
+	public MouseOperation getMouseOp() {
 		return mouseOp;
 	}
 
