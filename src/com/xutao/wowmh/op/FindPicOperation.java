@@ -11,7 +11,7 @@ import com.xutao.wowmh.core.ComWrapper;
 import com.xutao.wowmh.core.PixelPoint;
 
 public class FindPicOperation extends FindPic {
-	private static final double SIMULATE_RATE = 0.8;
+	private static final double SIMILARITY = 0.8;
 
 	private static final Logger logger = LogManager.getLogger(FindPicOperation.class);
 
@@ -63,7 +63,7 @@ public class FindPicOperation extends FindPic {
 	public int[] findPicCenter(String bmp, int xOffset, int yOffset, int mode) {
 		int centerX = java.awt.Toolkit.getDefaultToolkit().getScreenSize().width / 2;
 		int centerY = java.awt.Toolkit.getDefaultToolkit().getScreenSize().height / 2;
-		return this.findPic(centerX - xOffset, centerY - yOffset, centerX + xOffset, centerY + yOffset, bmp, "000000", SIMULATE_RATE, mode);
+		return this.findPic(centerX - xOffset, centerY - yOffset, centerX + xOffset, centerY + yOffset, bmp, "000000", SIMILARITY, mode);
 	}
 
 	/** 已默认方式从屏幕中央找图 */
@@ -111,11 +111,11 @@ public class FindPicOperation extends FindPic {
 
 	/** 在一个指定起点和长宽的范围内查找图片 */
 	public int[] findPicByOffset(String bmp, PixelPoint original, int areaWidth, int areaHeight) {
-		return this.findPic(original.x, original.y, original.x + areaWidth, original.y + areaHeight, bmp, "000000", SIMULATE_RATE, 0);
+		return this.findPic(original.x, original.y, original.x + areaWidth, original.y + areaHeight, bmp, "000000", SIMILARITY, 0);
 	}
 
 	/** 在一个长方形范围内查找图片 */
 	public int[] findPicByOffset(String bmp, Rectangle r) {
-		return this.findPic(r.x, r.y, r.x + r.width, r.y + r.height, bmp, "000000", SIMULATE_RATE, 0);
+		return this.findPic(r.x, r.y, r.x + r.width, r.y + r.height, bmp, "000000", SIMILARITY, 0);
 	}
 }

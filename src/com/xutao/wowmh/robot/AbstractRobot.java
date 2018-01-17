@@ -7,13 +7,13 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.xnx3.bean.ActiveBean;
-import com.xnx3.microsoft.Color;
 import com.xnx3.microsoft.File;
 import com.xnx3.microsoft.Sleep;
 import com.xnx3.microsoft.SystemUtil;
 import com.xnx3.microsoft.Tts;
 import com.xnx3.microsoft.Window;
 import com.xutao.wowmh.core.ComWrapper;
+import com.xutao.wowmh.op.ColorOperation;
 import com.xutao.wowmh.op.FindPicOperation;
 import com.xutao.wowmh.op.KeyboardOperation;
 import com.xutao.wowmh.op.MouseOperation;
@@ -107,7 +107,7 @@ public class AbstractRobot {
 		return com.getKeyboardOp();
 	}
 
-	public Color getColorOp() {
+	public ColorOperation getColorOp() {
 		return com.getColorOp();
 	}
 

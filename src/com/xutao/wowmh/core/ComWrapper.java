@@ -2,15 +2,16 @@ package com.xutao.wowmh.core;
 
 import java.io.Closeable;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.xnx3.microsoft.Color;
 import com.xnx3.microsoft.Com;
 import com.xnx3.microsoft.File;
 import com.xnx3.microsoft.SystemUtil;
 import com.xnx3.microsoft.Window;
 import com.xutao.games.recorder.ScreenshotCatcher;
+import com.xutao.wowmh.op.ColorOperation;
 import com.xutao.wowmh.op.FindPicOperation;
 import com.xutao.wowmh.op.KeyboardOperation;
 import com.xutao.wowmh.op.MouseOperation;
@@ -34,7 +35,7 @@ public class ComWrapper extends Com implements Closeable {
 	private final KeyboardOperation keyboardOp = new KeyboardOperation(this.getActiveXComponent());
 
 	/** 颜色相关的取色、判断类 */
-	private final Color colorOp = new Color(this.getActiveXComponent());
+	private final ColorOperation colorOp = new ColorOperation(this);
 
 	/** 文件相关的操作类，如截图等 */
 	private final File fileOp = new File(this.getActiveXComponent());
@@ -44,12 +45,16 @@ public class ComWrapper extends Com implements Closeable {
 
 	/** 实时截图的工具，用来调试 */
 	private final ScreenshotCatcher printScreen = new ScreenshotCatcher("H:\\test", 256);
-	
-	
-	public ComWrapper() {
-		super();
 
-		this.setResourcePath("H:\\eclipse-workspace\\WoW\\dmres");
+	public ComWrapper() {
+		this(null);
+	}
+
+	public ComWrapper(String resourceDir) {
+		super();
+		if (!StringUtils.isEmpty(resourceDir)) {
+			this.setResourcePath(resourceDir);
+		}
 		// 登录时的账号识别字典
 		this.setDict(ComWrapper.ACCOUNT_DICT, "wow.txt");
 		this.setDict(ComWrapper.ROLE_LIST_DICT, "roleList.txt");
@@ -82,7 +87,7 @@ public class ComWrapper extends Com implements Closeable {
 		return keyboardOp;
 	}
 
-	public Color getColorOp() {
+	public ColorOperation getColorOp() {
 		return colorOp;
 	}
 

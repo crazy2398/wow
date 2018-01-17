@@ -5,7 +5,7 @@ import java.awt.Rectangle;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.xnx3.bean.ActiveBean;
+import com.xnx3.microsoft.Com;
 import com.xnx3.microsoft.FindStr;
 import com.xutao.wowmh.core.ComWrapper;
 import com.xutao.wowmh.core.PixelPoint;
@@ -157,7 +157,7 @@ public class FindStrOperation extends FindStr {
 		this.dict = dict;
 	}
 
-	public void setSim(double sim) {
+	public void setSimilarity(double sim) {
 		this.sim = sim;
 	}
 

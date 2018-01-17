@@ -11,7 +11,7 @@ import com.xutao.wowmh.core.ComWrapper;
 public class SelectRoleByLevelRobotTest {
 	@Test
 	public void testLogin() {
-		try (ComWrapper com = new ComWrapper()) {
+		try (ComWrapper com = new ComWrapper("H:\\eclipse-workspace\\WoW\\dmres")) {
 
 			Assert.assertTrue(com.isCreateSuccess());
 
