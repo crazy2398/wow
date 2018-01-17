@@ -25,5 +25,4 @@ public class PixelPoint extends Point {
 	public PixelPoint offset(int x, int y) {
 		return new PixelPoint(this.x + x, this.y + y);
 	}
-
 }

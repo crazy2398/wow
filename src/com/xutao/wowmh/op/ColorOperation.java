@@ -2,7 +2,16 @@ package com.xutao.wowmh.op;
 
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 
+import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import com.jacob.activeX.ActiveXComponent;
+import com.jacob.com.Variant;
 import com.xnx3.microsoft.Color;
 import com.xutao.wowmh.core.ComWrapper;
 import com.xutao.wowmh.core.PixelPoint;
@@ -12,6 +21,8 @@ import com.xutao.wowmh.core.PixelPoint;
  *
  */
 public class ColorOperation extends Color {
+
+	private static final Logger logger = LogManager.getLogger(ColorOperation.class);
 
 	public enum Direction {
 		/** 0: 从左到右,从上到下 */
@@ -37,9 +48,12 @@ public class ColorOperation extends Color {
 
 	private final ComWrapper com;
 
+	private final ActiveXComponent active;
+
 	public ColorOperation(ComWrapper com) {
 		super(com.getActiveXComponent());
 		this.com = com;
+		this.active = com.getActiveXComponent().getDm();
 	}
 
 	public float getSimilarity() {
@@ -90,7 +104,7 @@ public class ColorOperation extends Color {
 	}
 
 	/**
-	 * 范围区域内查询某颜色是否存在
+	 * 范围区域内查询某颜色的位置
 	 * 
 	 * @param original
 	 *            起始点坐标，区域的左点
@@ -101,13 +115,90 @@ public class ColorOperation extends Color {
 	 * @param color
 	 *            颜色 格式为"RRGGBB-DRDGDB",比如"123456-000000|aabbcc-202020"
 	 * 
+	 * @return PixelPoint
+	 *         <li>若是成功返回找到的第一个点的坐标
+	 *         <li>若是失败，返回null
+	 */
+	public PixelPoint findColor(PixelPoint original, int areaWidth, int areaHeight, String color) {
+		int[] a = this.findColor(original.x, original.y, original.x + areaWidth, original.y + areaHeight, color, similarity, direction.ordinal());
+		return a != null && a.length > 1 && a[0] > 0 ? new PixelPoint(a[0], a[1]) : null;
+
+	}
+
+	/**
+	 * 范围区域内查询某颜色是否存在
+	 * 
+	 * @param xStart
+	 *            起始点x坐标，区域的左上X坐标
+	 * @param yStart
+	 *            起始点y坐标，区域的左上Y坐标
+	 * @param xEnd
+	 *            结束点x坐标，区域的右下X坐标
+	 * @param yEnd
+	 *            结束点y坐标，区域的右下Y坐标
+	 * @param color
+	 *            颜色 格式为"RRGGBB-DRDGDB",比如"123456-000000|aabbcc-202020"
+	 * @param sim
+	 *            相似度,取值范围0.1-1.0
+	 * @param dir
+	 *            查找方向
+	 *            <li>0: 从左到右,从上到下
+	 *            <li>1: 从左到右,从下到上
+	 *            <li>2: 从右到左,从上到下
+	 *            <li>3: 从右到左,从下到上
+	 *            <li>4：从中心往外查找
+	 *            <li>5: 从上到下,从左到右
+	 *            <li>6: 从上到下,从右到左
+	 *            <li>7: 从下到上,从左到右
+	 *            <li>8: 从下到上,从右到左
 	 * @return array
 	 *         <li>若是成功返回坐在坐标int[0]：X坐标，int[1]：Y坐标
 	 *         <li>若是失败，则都是-1
 	 */
-	public int[] findColor(PixelPoint original, int areaWidth, int areaHeight, String color) {
-		return this.findColor(original.x, original.y, original.x + areaWidth, original.y + areaHeight, color,
-				similarity, direction.ordinal());
+	public int[] findColor(int xStart, int yStart, int xEnd, int yEnd, String color, double sim, int dir) {
+		if (logger.isDebugEnabled()) {
+			com.getPrintScreen().capture("findColor_" + color, xStart, yStart, xEnd, yEnd);
+		}
+
+		return super.findColor(xStart, yStart, xEnd, yEnd, color, sim, dir);
+	}
+
+	/**
+	 * 范围区域内查询某颜色的位置
+	 * 
+	 * @param r
+	 *            区域
+	 * @param color
+	 *            颜色 格式为"RRGGBB-DRDGDB",比如"123456-000000|aabbcc-202020"
+	 * 
+	 * @return PixelPoint
+	 *         <li>若是成功返回找到的第一个点的坐标
+	 *         <li>若是失败，返回null
+	 */
+	public PixelPoint findColor(Rectangle r, String color) {
+		int[] a = this.findColor(r.x, r.y, r.x + r.width, r.y + r.height, color, similarity, direction.ordinal());
+		return a != null && a.length > 1 && a[0] > 0 ? new PixelPoint(a[0], a[1]) : null;
+
+	}
+
+	/**
+	 * 范围区域内查询某颜色的全部位置
+	 * 
+	 * @param original
+	 *            起始点坐标，区域的左点
+	 * @param areaWidth
+	 *            区域的宽度
+	 * @param areaHeight
+	 *            区域的高度
+	 * @param color
+	 *            颜色 格式为"RRGGBB-DRDGDB",比如"123456-000000|aabbcc-202020"
+	 * 
+	 * @return Collection &lt;PixelPoint&gt;
+	 *         <li>若是成功返回找到的所有点
+	 *         <li>若是失败，返回空的Collection
+	 */
+	public Collection<PixelPoint> findAllPoints(PixelPoint original, int areaWidth, int areaHeight, String color) {
+		return this.findAllPoints(original.x, original.y, original.x + areaWidth, original.y + areaHeight, color, similarity, direction.ordinal());
 
 	}
 
@@ -119,13 +210,87 @@ public class ColorOperation extends Color {
 	 * @param color
 	 *            颜色 格式为"RRGGBB-DRDGDB",比如"123456-000000|aabbcc-202020"
 	 * 
-	 * @return array
-	 *         <li>若是成功返回坐在坐标int[0]：X坐标，int[1]：Y坐标
-	 *         <li>若是失败，则都是-1
+	 * @return Collection &lt;PixelPoint&gt;
+	 *         <li>若是成功返回找到的所有点
+	 *         <li>若是失败，返回空的Collection
 	 */
-	public int[] findColor(Rectangle r, String color) {
-		return this.findColor(r.x, r.y, r.x + r.width, r.y + r.height, color, similarity, direction.ordinal());
+	public Collection<PixelPoint> findAllPoints(Rectangle r, String color) {
+		return this.findAllPoints(r.x, r.y, r.x + r.width, r.y + r.height, color, similarity, direction.ordinal());
+	}
 
+	/**
+	 * 范围区域内查询某颜色是否存在
+	 * 
+	 * @param xStart
+	 *            起始点x坐标，区域的左上X坐标
+	 * @param yStart
+	 *            起始点y坐标，区域的左上Y坐标
+	 * @param xEnd
+	 *            结束点x坐标，区域的右下X坐标
+	 * @param yEnd
+	 *            结束点y坐标，区域的右下Y坐标
+	 * @param color
+	 *            颜色 格式为"RRGGBB-DRDGDB",比如"123456-000000|aabbcc-202020"
+	 * @param sim
+	 *            相似度,取值范围0.1-1.0
+	 * @param dir
+	 *            查找方向
+	 *            <li>0: 从左到右,从上到下
+	 *            <li>1: 从左到右,从下到上
+	 *            <li>2: 从右到左,从上到下
+	 *            <li>3: 从右到左,从下到上
+	 *            <li>4：从中心往外查找
+	 *            <li>5: 从上到下,从左到右
+	 *            <li>6: 从上到下,从右到左
+	 *            <li>7: 从下到上,从左到右
+	 *            <li>8: 从下到上,从右到左
+	 * 
+	 * @return Collection &lt;PixelPoint&gt;
+	 *         <li>若是成功返回找到的所有点
+	 *         <li>若是失败，返回空的Collection
+	 */
+	protected Collection<PixelPoint> findAllPoints(int xStart, int yStart, int xEnd, int yEnd, String color, double sim, int dir) {
+		if (logger.isDebugEnabled()) {
+			com.getPrintScreen().capture("findAllPoints" + color, xStart, yStart, xEnd, yEnd);
+		}
+
+		try {
+			Variant[] var = new Variant[7];
+			var[0] = new Variant(xStart);
+			var[1] = new Variant(yStart);
+			var[2] = new Variant(xEnd);
+			var[3] = new Variant(yEnd);
+			var[4] = new Variant(color);
+			var[5] = new Variant(sim);
+			// FindColorEx不支持中间查找
+			var[6] = new Variant(dir == 4 ? 0 : dir);
+
+			// logger.error(this.active.invoke("Ver").getString());
+
+			String findColor = this.active.invoke("FindColorEx", var).getString();
+			logger.debug("FindColorEx:" + findColor);
+			if (StringUtils.isEmpty(findColor)) {
+				return Collections.emptyList();
+			}
+
+			String[] colors = StringUtils.split(findColor, "|");// findColor.split("\\|");
+			String[] x = StringUtils.split(colors[0], ",");
+			String[] y = StringUtils.split(colors[1], ",");
+
+			ArrayList<PixelPoint> points = new ArrayList<>(x.length);
+
+			for (int i = 0; i < x.length; i++) {
+				points.add(new PixelPoint(Integer.parseInt(x[i]), Integer.parseInt(y[i])));
+			}
+
+			findColor =null;
+
+			return points;
+			
+		} catch (Exception e) {
+			logger.error("查找颜色时发生异常", e);
+			throw new RuntimeException(e);
+		}
 	}
 
 }

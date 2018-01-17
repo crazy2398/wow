@@ -85,10 +85,14 @@ public class AbstractRobot {
 		beep(code.length, flag);
 	}
 
-	public void beep(String msg, int... code) {
-		beep(code);
-		Tts tts = new Tts(com.getActiveXComponent());
-		tts.speak(msg);
+	public void beep(final String msg, final int... code) {
+		new Thread() {
+			public void run() {
+				beep(code);
+				Tts tts = new Tts(com.getActiveXComponent());
+				tts.speak(msg);
+			}
+		}.start();
 	}
 
 	public Window getWindowOp() {

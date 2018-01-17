@@ -49,16 +49,19 @@ public class AutoLoginRobot extends AbstractRobot {
 
 		kbOp.enter();
 
+		// 将鼠标移开屏幕中央，防止鼠标附近的颜色影响选择
+		getMouseOp().mouseMoveTo((int)(100*Math.random()), (int)(100*Math.random()));
+		
 		FindStrOperation findStr = new FindStrOperation(getComWrapper(), ComWrapper.ROLE_LIST_DICT);
 
-		final int RERTY_LIMIT = 5;
+		final int RERTY_LIMIT = 30;
 
 		int retryTimes = RERTY_LIMIT;
 
 		boolean done = false;
 
 		while (retryTimes-- > 0) {
-			sleep(5, TimeUnit.SECONDS);
+			sleep(1, TimeUnit.SECONDS);
 			done = isWaitingRoleSelect();
 
 			if (done) {
@@ -117,7 +120,7 @@ public class AutoLoginRobot extends AbstractRobot {
 			}
 		}).start();
 
-		int hwnd = findWindows(4);
+		int hwnd = findWindows(8);
 
 		if (hwnd <= 0) {
 			String msg = String.format("没有发现[%s]窗口，异常结束", WINDOW_TITLE);
