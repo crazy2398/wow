@@ -124,7 +124,7 @@ public class SelectRoleByLevelRobot extends AbstractRobot {
 			return false;
 		}
 
-		getComWrapper().getMouseOp().leftClick(p, 1);
+		getComWrapper().getMouseOp().leftClick(p);
 		logger.info("已经选定等级[" + role.getLevel() + "]角色[" + role.getProfession() + "]");
 		sleep(500);
 

@@ -67,6 +67,7 @@ public class AutoLoginRobot extends AbstractRobot {
 			if (done) {
 				beep("成功登入", 1);
 				logger.info("在第" + (RERTY_LIMIT - retryTimes) + "次识别时成功登入");
+				sleep(1, TimeUnit.SECONDS);
 				break;
 			}
 

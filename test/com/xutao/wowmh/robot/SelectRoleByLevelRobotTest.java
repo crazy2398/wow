@@ -25,7 +25,7 @@ public class SelectRoleByLevelRobotTest {
 
 			for (Role r : allRoles) {
 				Point p = r.getScreenPosition();
-				com.getMouseOp().mouseClick(p.x, p.y, true);
+				com.getMouseOp().leftClick(p);
 				roleRobot.sleep(1000);
 			}
 

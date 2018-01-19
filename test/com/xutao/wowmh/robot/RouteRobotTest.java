@@ -12,11 +12,36 @@ import com.xutao.wowmh.core.PixelPoint;
 public class RouteRobotTest {
 	@Test
 	public void getAngleTest() {
-		PixelPoint a = new PixelPoint(0, 0);
-		PixelPoint b = new PixelPoint(5, 5);
-		System.out.println(RouteRobot.getAngle(a, b)); 
+		Object[][] target = {
+						//
+						{ new PixelPoint(100, 100), new PixelPoint(105, 100), 0.0d },
+						//
+						{ new PixelPoint(100, 100), new PixelPoint(105, 105), 45.0d },
+						//
+						{ new PixelPoint(100, 100), new PixelPoint(100, 105), 90.0d },
+						//
+						{ new PixelPoint(100, 100), new PixelPoint(95, 105), 135.0d },
+						//
+						{ new PixelPoint(100, 100), new PixelPoint(95, 100), 180.0d },
+						//
+						{ new PixelPoint(100, 100), new PixelPoint(95, 95), 225.0d },
+						//
+						{ new PixelPoint(100, 100), new PixelPoint(100, 95), 270.0d },
+						//
+						{ new PixelPoint(100, 100), new PixelPoint(105, 95), 315.0d }
+
+		};
+
+		int i = 0;
+
+		for (Object[] data : target) {
+			double degree = RouteRobot.getAngle((PixelPoint) data[0], (PixelPoint) data[1]);
+			System.out.println("degee[" + (i++) + "]=" + degree);
+
+			Assert.assertEquals((double) data[2], degree, 0.0001);
+		}
+
 	}
-	
 
 	@Test
 	public void testMain() {
@@ -33,21 +58,27 @@ public class RouteRobotTest {
 			List<Role> allRoles = roleRobot.getRoles(null, null, null, null);
 
 			Assert.assertTrue(allRoles != null && allRoles.size() > 0);
-			
-			Assert.assertTrue(roleRobot.enterGame( allRoles.get(0)));
-	
+
+			Assert.assertTrue(roleRobot.enterGame(allRoles.get(0)));
+
 			RouteRobot routeRobot = new RouteRobot(com);
-			
-			System.out.println( routeRobot.getCurrentOrientation());
-			roleRobot.sleep(2000);
-			System.out.println( routeRobot.getCurrentOrientation());
-			roleRobot.sleep(2000);
-			System.out.println( routeRobot.getCurrentOrientation());
-			roleRobot.sleep(2000);
-			System.out.println( routeRobot.getCurrentOrientation());
-			
-			roleRobot.sleep(2000);
-			
+
+			double degree = routeRobot.getCurrentOrientation();
+			// 重置鼠标位置
+			routeRobot.getMouseOp().mouseMoveToArea(200, 200, 100, 100);
+
+			for (int i = 0; i < 20; i++) {
+				routeRobot.getMouseOp().rightDown();
+				routeRobot.sleep(50);
+				routeRobot.getMouseOp().mouseMoveRelative(i * 10, 0);
+				routeRobot.sleep(50);
+				routeRobot.getMouseOp().rightUp();
+				routeRobot.sleep(400);
+				double newDegree = routeRobot.getCurrentOrientation();
+
+				System.err.println("横移" + (i * 10) + "像素时角度差为:" + newDegree + "-" + degree + "=" + (newDegree - degree));
+				degree = newDegree;
+			}
 			loginRobot.exitGame();
 
 		}

@@ -1,6 +1,5 @@
 package com.xutao.wowmh.robot;
 
-import java.awt.Point;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.logging.log4j.LogManager;
@@ -90,7 +89,7 @@ public class AbstractRobot {
 			public void run() {
 				beep(code);
 				Tts tts = new Tts(com.getActiveXComponent());
-				tts.speak(msg);
+				tts.speak(msg, 5);
 			}
 		}.start();
 	}
@@ -139,14 +138,11 @@ public class AbstractRobot {
 	 */
 	public boolean clickPictureIfFound(int[] result) {
 		if (isPicFound(result) && result.length >= 3) {
-			return getMouseOp().mouseClick(result[1] + 1, result[2] + 1, true);
+			getMouseOp().mouseMoveTo(result[1] + 1, result[2] + 1);
+			return getMouseOp().leftClick();
 		}
 		logger.debug("没有找到图片");
 		return false;
-	}
-
-	public void clickPoint(Point p, boolean isLeftClick) {
-		getMouseOp().mouseClick(p, isLeftClick);
 	}
 
 	/** 在一个长方形范围内查找图片 */
