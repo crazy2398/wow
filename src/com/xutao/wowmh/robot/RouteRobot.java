@@ -1,15 +1,7 @@
 package com.xutao.wowmh.robot;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
-import org.apache.commons.lang3.ObjectUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -29,7 +21,7 @@ public class RouteRobot extends AbstractRobot {
 		PixelPoint expected = new PixelPoint(-97, 77);
 		// return getColorOp().findColor(expected, 20, 20, "272842-0f0f0d");
 
-		//Collection<PixelPoint> allpoints = getColorOp().findAllPoints(expected, 20, 20, "272842-0f0f0d");
+		Collection<PixelPoint> allpoints = getColorOp().findAllPoints(expected, 20, 20, "272842-0f0f0d");
 		// Collection<PixelPoint> allpoints = getColorOp().findAllPoints(expected, 20,
 		// 20, "1E1E2D-19161A");
 		// Collection<PixelPoint> allpoints = getColorOp().findAllPoints(expected, 20,
@@ -37,9 +29,16 @@ public class RouteRobot extends AbstractRobot {
 
 		//Collection<PixelPoint> allpoints = getColorOp().findAllPoints(expected, 20, 20, "22253F-1F1E1C");
 		// Collection<PixelPoint> allpoints = getColorOp().findAllPoints(expected, 20, 20, "191B33-18181A");
-		Collection<PixelPoint> allpoints = getColorOp().findAllPoints(expected, 20, 20, "1E1F31-151317");
+		//Collection<PixelPoint> allpoints = getColorOp().findAllPoints(expected, 20, 20, "1E1F31-151317");
 		
-		return findSquareColor(allpoints);
+		// 去找三乘三方块
+		PixelPoint leftTop = getColorOp().findSquareColor(allpoints, 3);
+		if(leftTop == null) {
+			// 没有三乘三就找二乘二
+			return getColorOp().findSquareColor(allpoints, 2);
+		}
+		//三乘三方块 取中心点
+		return leftTop.offset(1, 1);
 	}
 
 

@@ -9,6 +9,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -313,202 +314,209 @@ public class ColorOperation extends Color {
 
 	};
 
-	private static final void printPointMatrix(Collection<PixelPoint> c) {
+	// private static final void printPointMatrix(Collection<PixelPoint> c) {
+	//
+	// Map<Integer, List<PixelPoint>> matrix = new HashMap<>();
+	// // Map<Integer, Map<Integer, PixelPoint>> yMap = new HashMap<>();
+	//
+	// int minX = Integer.MAX_VALUE;
+	//
+	// for (PixelPoint p : c) {
+	//
+	// List<PixelPoint> row = matrix.get(p.y);
+	//
+	// if (row == null) {
+	// row = new ArrayList<>();
+	// matrix.put(p.y, row);
+	// }
+	// row.add(p);
+	//
+	// minX = Math.min(minX, p.x);
+	// }
+	// logger.debug("minX=" + minX);
+	//
+	// int maxX = -1;
+	//
+	// for (List<PixelPoint> row : matrix.values()) {
+	// Collections.sort(row, comp);
+	// maxX = Math.max(maxX, row.get(row.size() - 1).x);
+	// }
+	//
+	// List<Integer> rows = new ArrayList<>(matrix.keySet().size());
+	// rows.addAll(matrix.keySet());
+	// Collections.sort(rows);
+	//
+	// final String BLANK = "☒";
+	// final String POINT = "■";
+	//
+	// Integer lastRowIdx = null;
+	//
+	// int lineSize = maxX - minX + 1;
+	//
+	// for (Integer rowIdx : rows) {
+	//
+	// // 打印空行
+	// for (int i = 0; lastRowIdx != null && i < rowIdx - lastRowIdx - 1; i++) {
+	// logger.debug(StringUtils.repeat(BLANK, lineSize));
+	// }
+	// lastRowIdx = rowIdx;
+	//
+	// PixelPoint lastPoint = new PixelPoint(minX, rowIdx);
+	// StringBuilder str = new StringBuilder();
+	// StringBuilder pstr = new StringBuilder();
+	// for (PixelPoint p : matrix.get(rowIdx)) {
+	// str.append(StringUtils.repeat(BLANK, p.x - lastPoint.x - 1)).append(POINT);
+	// pstr.append("(").append(p.x).append(",").append(p.y).append(")");
+	// lastPoint = p;
+	// }
+	//
+	// logger.debug(StringUtils.rightPad(str.toString(), lineSize, BLANK) +
+	// pstr.toString());
+	// }
+	//
+	// }
 
-		Map<Integer, List<PixelPoint>> matrix = new HashMap<>();
-		// Map<Integer, Map<Integer, PixelPoint>> yMap = new HashMap<>();
+	/** 一个点的矩阵结构 */
+	private static class PointsArray {
+		private PixelPoint[][] array = null;
+		private int minX = Integer.MAX_VALUE;
+		private int minY = Integer.MAX_VALUE;
+		private int maxX = -1;
+		private int maxY = -1;
 
-		int minX = Integer.MAX_VALUE;
+		public PointsArray(Collection<PixelPoint> c) {
+			Map<Integer, List<PixelPoint>> matrix = new HashMap<>();
 
-		for (PixelPoint p : c) {
+			for (PixelPoint p : c) {
+				List<PixelPoint> row = matrix.get(p.x);
 
-			List<PixelPoint> row = matrix.get(p.y);
-
-			if (row == null) {
-				row = new ArrayList<>();
-				matrix.put(p.y, row);
-			}
-			row.add(p);
-
-			minX = Math.min(minX, p.x);
-		}
-		logger.debug("minX=" + minX);
-
-		int maxX = -1;
-
-		for (List<PixelPoint> row : matrix.values()) {
-			Collections.sort(row, comp);
-			maxX = Math.max(maxX, row.get(row.size() - 1).x);
-		}
-
-		List<Integer> rows = new ArrayList<>(matrix.keySet().size());
-		rows.addAll(matrix.keySet());
-		Collections.sort(rows);
-
-		final String BLANK = "☒";
-		final String POINT = "■";
-
-		Integer lastRowIdx = null;
-
-		int lineSize = maxX - minX + 1;
-
-		for (Integer rowIdx : rows) {
-
-			// 打印空行
-			for (int i = 0; lastRowIdx != null && i < rowIdx - lastRowIdx - 1; i++) {
-				logger.debug(StringUtils.repeat(BLANK, lineSize));
-			}
-			lastRowIdx = rowIdx;
-
-			PixelPoint lastPoint = new PixelPoint(minX, rowIdx);
-			StringBuilder str = new StringBuilder();
-			StringBuilder pstr = new StringBuilder();
-			for (PixelPoint p : matrix.get(rowIdx)) {
-				str.append(StringUtils.repeat(BLANK, p.x - lastPoint.x - 1)).append(POINT);
-				pstr.append("(").append(p.x).append(",").append(p.y).append(")");
-				lastPoint = p;
-			}
-
-			logger.debug(StringUtils.rightPad(str.toString(), lineSize, BLANK) + pstr.toString());
-		}
-
-	}
-
-	/** 查找一个满足条件的正方形 */
-	public static PixelPoint findSquareColor(Collection<PixelPoint> allpoints, int sqSize) {
-		if (logger.isDebugEnabled()) {
-			printPointMatrix(allpoints);
-		}
-
-		Map<Integer, Map<Integer, PixelPoint>> xMap = new HashMap<>();
-		Map<Integer, Map<Integer, PixelPoint>> yMap = new HashMap<>();
-
-		int maxX = -1;
-		int minX = Integer.MAX_VALUE;
-
-		for (PixelPoint p : allpoints) {
-
-			Map<Integer, PixelPoint> map = xMap.get(p.x);
-
-			if (map == null) {
-				map = new HashMap<>();
-				xMap.put(p.x, map);
-			}
-			map.put(p.y, p);
-
-			map = yMap.get(p.y);
-			if (map == null) {
-				map = new HashMap<>();
-				yMap.put(p.y, map);
-			}
-			map.put(p.x, p);
-
-			maxX = Math.max(p.x, maxX);
-			minX = Math.min(p.x, minX);
-		}
-
-		PixelPoint leftUp = null;
-
-		
-		for (PixelPoint p : allpoints) {
-			@SuppressWarnings("unchecked")
-			Map<Integer, PixelPoint>[] xMapArray = new HashMap[sqSize];
-			@SuppressWarnings("unchecked")
-			Map<Integer, PixelPoint>[] yMapArray = new HashMap[sqSize];
-
-			boolean arrayWithNull = false;
-			boolean found = true;
-			// 找几行几列的数据
-			for(int i = 0;i <sqSize;i++ ) {
-				xMapArray[i] = xMap.get(p.x + i);
-				yMapArray[i] = xMap.get(p.y + i);
-				
-				// 没有就不干了
-				if(arrayWithNull = (xMapArray[i] == null || yMapArray[i] ==null)) {
-					break;
+				if (row == null) {
+					row = new ArrayList<>();
+					matrix.put(p.x, row);
 				}
-				
-				found = xMapArray[1].containsKey(p.x - 1) && xMapArray[i].containsKey(p.x) && xMapArray[i].containsKey(p.x + 1);
-				
-			}
-			// 连数据都找不全就找下个点了
-			if(arrayWithNull) {
-				continue;
-			}
-			
+				row.add(p);
 
-			
-			
-			
+				minX = Math.min(minX, p.x);
+				minY = Math.min(minY, p.y);
+				maxX = Math.max(maxX, p.x);
+				maxY = Math.max(maxY, p.y);
+			}
+
+			array = new PixelPoint[maxX - minX + 1][maxY - minY + 1];
+
+			for (Entry<Integer, List<PixelPoint>> e : matrix.entrySet()) {
+				for (PixelPoint p : e.getValue()) {
+					array[e.getKey() - minX][p.y - minY] = p;
+				}
+			}
+
+			if (logger.isDebugEnabled()) {
+				logger.debug(this);
+			}
 		}
 
-		return null;
+		private int getX(PixelPoint p) {
+			return p.x - minX;
+		}
 
+		private int getY(PixelPoint p) {
+			return p.y - minY;
+		}
+
+		private int getRows() {
+			return maxX - minX + 1;
+		}
+
+		private int getCols() {
+			return maxY - minY + 1;
+		}
+
+		/**
+		 * 查找能否构成一个被填充好的正方形
+		 * 
+		 * @param size
+		 *            正方形边的像素数
+		 * @return 找到的左上角点，没找到是null
+		 */
+		public PixelPoint findSquare(final int size) {
+			for (PixelPoint[] row : array) {
+				for (PixelPoint p : row) {
+					if (p != null && findSquare(p, size)) {
+						return p;
+					}
+				}
+			}
+
+			return null;
+		}
+
+		/**
+		 * 以迭代的方式查找从某个点开始的正方形
+		 * 
+		 * @param leftTop
+		 *            左上角
+		 * @param size
+		 *            正方形边的像素数
+		 * @return 是否找到
+		 */
+		private boolean findSquare(final PixelPoint leftTop, final int size) {
+			if (leftTop != null && size > 1) {
+
+				int x = getX(leftTop);
+				int y = getY(leftTop);
+
+				// 如果到边界了还放不下就肯定没戏
+				if (x + size > getRows() || y + size > getCols()) {
+					logger.debug("findSquare(" + leftTop.toString() + "," + size + ")的返回值是false,超越边界");
+					return false;
+				}
+
+				// 寻找最上边和最左边是否满足条件
+				for (int i = 1; i < size; i++) {
+					if (array[x + i][y] == null || array[x][y + i] == null) {
+						logger.debug("findSquare(" + leftTop.toString() + "," + size + ")的返回值是false,上边线和左边线失败");
+						return false;
+					}
+				}
+				// 向右下角递进一个像素，看是否是一个小了一像素的正方形
+				logger.debug("findSquare(" + leftTop.toString() + "," + size + ")的返回值是右下方向迭代值");
+				return findSquare(array[x + 1][y + 1], size - 1);
+			} else {
+				// 迭代结束条件
+				logger.debug("findSquare(" + (leftTop == null ? null : leftTop.toString()) + "," + size + ")的返回值是" + (leftTop != null) + ",迭代条件结束");
+				return leftTop != null;
+			}
+		}
+
+		public String toString() {
+			final String NEW_LINE = System.getProperty("line.separator");
+			final int devider = 50;
+			StringBuilder str = new StringBuilder(StringUtils.repeat("=", devider)).append(NEW_LINE);
+			for (PixelPoint[] row : array) {
+				StringBuilder ps = new StringBuilder();
+				for (PixelPoint p : row) {
+					str.append(p != null ? "■" : "☒");
+					if (p != null) {
+						ps.append("(").append(p.x).append(",").append(p.y).append(")");
+					}
+				}
+				str.append(ps.toString());
+				str.append(NEW_LINE);
+			}
+			str.append(StringUtils.repeat("=", devider)).append(NEW_LINE);
+			return str.toString();
+		}
 	}
 
 	/**
 	 * @param allpoints
 	 * @return
 	 */
-	public static PixelPoint findSquareColor1(Collection<PixelPoint> allpoints, int sqSize) {
-		Map<Integer, Map<Integer, PixelPoint>> xMap = new HashMap<>();
-		Map<Integer, Map<Integer, PixelPoint>> yMap = new HashMap<>();
+	public PixelPoint findSquareColor(Collection<PixelPoint> allpoints, int sqSize) {
 
-		for (PixelPoint p : allpoints) {
+		PointsArray pa = new PointsArray(allpoints);
 
-			Map<Integer, PixelPoint> map = xMap.get(p.x);
-
-			if (map == null) {
-				map = new HashMap<>();
-				xMap.put(p.x, map);
-			}
-			map.put(p.y, p);
-
-			map = yMap.get(p.y);
-			if (map == null) {
-				map = new HashMap<>();
-				yMap.put(p.y, map);
-			}
-			map.put(p.x, p);
-		}
-
-		PixelPoint center = null;
-
-		for (PixelPoint p : allpoints) {
-
-			Map<Integer, PixelPoint> xPlusOne = xMap.get(p.x + 1);
-			Map<Integer, PixelPoint> yPlusOne = yMap.get(p.y + 1);
-			Map<Integer, PixelPoint> xMinusOne = xMap.get(p.x - 1);
-			Map<Integer, PixelPoint> yMinusOne = yMap.get(p.y - 1);
-
-			if (xPlusOne == null || yPlusOne == null || xMinusOne == null || yMinusOne == null) {
-				continue;
-			}
-
-			// logger.debug("center=" + p);
-			//
-			// logger.debug("(x-1,y-1)=" + yMinusOne.containsKey(p.x - 1) );
-			// logger.debug("(x,y-1)=" + yMinusOne.containsKey(p.x) );
-			// logger.debug("(x+1,y-1)=" + yMinusOne.containsKey(p.x +1) );
-			// 第一层
-			boolean found = yMinusOne.containsKey(p.x - 1) && yMinusOne.containsKey(p.x) && yMinusOne.containsKey(p.x + 1);
-			// logger.debug("(x-1,y)=" + xPlusOne.containsKey(p.y) );
-			// logger.debug("(x+1,y)=" + xMinusOne.containsKey(p.y));
-			// 第二层
-			found = found && xPlusOne.containsKey(p.y) && xMinusOne.containsKey(p.y);
-			// 第三层
-			found = found && yPlusOne.containsKey(p.x - 1) && yPlusOne.containsKey(p.x) && yPlusOne.containsKey(p.x + 1);
-			// logger.debug("(x-1,y+1)=" + yPlusOne.containsKey(p.x - 1) );
-			// logger.debug("(x,y+1)=" + yPlusOne.containsKey(p.x) );
-			// logger.debug("(x+1,y+1)=" + yPlusOne.containsKey(p.x +1) );
-
-			if (found) {
-				center = p;
-				break;
-			}
-		}
-
-		return center;
+		return pa.findSquare(sqSize);
 	}
 
 }

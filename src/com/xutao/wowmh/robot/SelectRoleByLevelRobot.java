@@ -104,15 +104,23 @@ public class SelectRoleByLevelRobot extends AbstractRobot {
 		String scaned = findStr.readStr(original, ROLE_WIDTH, ROLE_HEIGHT, "bababa-454545");
 		logger.debug("在角色栏第[" + (index + 1) + "]行发现字符串[" + scaned + "]");
 
-		Role r = getRoleFromText(scaned);
+		// 重试10次
+		for (int i = 0; i < 10; i++) {
+			Role r = getRoleFromText(scaned);
 
-		if (r != null) {
+			if (r != null) {
+				r.setScreenPosition(original.offset(30, 30));
+			}
+			// 只有在第一次进来的时候重试
+			if (index != 0 || r != null) {
+				return r;
+			}
 
-			r.setScreenPosition(original.offset(30, 30));
+			sleep(1, TimeUnit.SECONDS);
+
 		}
 
-		return r;
-
+		return null;
 	}
 
 	/** 登入系统 */
