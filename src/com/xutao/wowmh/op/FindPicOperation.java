@@ -22,6 +22,8 @@ public class FindPicOperation extends FindPic {
 		this.com = com;
 	}
 
+	private boolean debug = false;
+	
 	/**
 	 * 查找图片，返回找到的第一个图片的坐标
 	 * 
@@ -52,7 +54,7 @@ public class FindPicOperation extends FindPic {
 	 */
 	public int[] findPic(int xStart, int yStart, int xEnd, int yEnd, String pic, String deviationColor, double sim, int order) {
 
-		if (logger.isDebugEnabled()) {
+		if (logger.isDebugEnabled() && debug) {
 			String name = StringUtils.split(pic, ".")[0];
 			com.getPrintScreen().capture(name, xStart, yStart, xEnd, yEnd);
 		}
