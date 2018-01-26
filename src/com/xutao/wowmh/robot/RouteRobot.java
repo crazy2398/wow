@@ -27,20 +27,22 @@ public class RouteRobot extends AbstractRobot {
 		// Collection<PixelPoint> allpoints = getColorOp().findAllPoints(expected, 20,
 		// 20, "303751-2E302E");
 
-		//Collection<PixelPoint> allpoints = getColorOp().findAllPoints(expected, 20, 20, "22253F-1F1E1C");
-		// Collection<PixelPoint> allpoints = getColorOp().findAllPoints(expected, 20, 20, "191B33-18181A");
-		//Collection<PixelPoint> allpoints = getColorOp().findAllPoints(expected, 20, 20, "1E1F31-151317");
-		
+		// Collection<PixelPoint> allpoints = getColorOp().findAllPoints(expected, 20,
+		// 20, "22253F-1F1E1C");
+		// Collection<PixelPoint> allpoints = getColorOp().findAllPoints(expected, 20,
+		// 20, "191B33-18181A");
+		// Collection<PixelPoint> allpoints = getColorOp().findAllPoints(expected, 20,
+		// 20, "1E1F31-151317");
+
 		// 去找三乘三方块
 		PixelPoint leftTop = getColorOp().findSquareColor(allpoints, 3);
-		if(leftTop == null) {
+		if (leftTop == null) {
 			// 没有三乘三就找二乘二
 			return getColorOp().findSquareColor(allpoints, 2);
 		}
-		//三乘三方块 取中心点
+		// 三乘三方块 取中心点
 		return leftTop.offset(1, 1);
 	}
-
 
 	private PixelPoint getOutermostPoint(PixelPoint center, String color) {
 
@@ -93,4 +95,7 @@ public class RouteRobot extends AbstractRobot {
 
 		return brng < 0 ? brng + 360 : brng;
 	}
+	
+	
+	
 }
