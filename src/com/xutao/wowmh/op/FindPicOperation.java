@@ -1,6 +1,8 @@
 package com.xutao.wowmh.op;
 
+import java.awt.Point;
 import java.awt.Rectangle;
+import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
@@ -23,7 +25,7 @@ public class FindPicOperation extends FindPic {
 	}
 
 	private boolean debug = false;
-	
+
 	/**
 	 * 查找图片，返回找到的第一个图片的坐标
 	 * 
@@ -52,7 +54,8 @@ public class FindPicOperation extends FindPic {
 	 *         <li>int[1]:找到的图像的x坐标
 	 *         <li>int[2]:找到的图像的y坐标
 	 */
-	public int[] findPic(int xStart, int yStart, int xEnd, int yEnd, String pic, String deviationColor, double sim, int order) {
+	public int[] findPic(int xStart, int yStart, int xEnd, int yEnd, String pic, String deviationColor, double sim,
+			int order) {
 
 		if (logger.isDebugEnabled() && debug) {
 			String name = StringUtils.split(pic, ".")[0];
@@ -65,7 +68,8 @@ public class FindPicOperation extends FindPic {
 	public int[] findPicCenter(String bmp, int xOffset, int yOffset, int mode) {
 		int centerX = java.awt.Toolkit.getDefaultToolkit().getScreenSize().width / 2;
 		int centerY = java.awt.Toolkit.getDefaultToolkit().getScreenSize().height / 2;
-		return this.findPic(centerX - xOffset, centerY - yOffset, centerX + xOffset, centerY + yOffset, bmp, "000000", SIMILARITY, mode);
+		return this.findPic(centerX - xOffset, centerY - yOffset, centerX + xOffset, centerY + yOffset, bmp, "000000",
+				SIMILARITY, mode);
 	}
 
 	/** 已默认方式从屏幕中央找图 */
@@ -100,7 +104,8 @@ public class FindPicOperation extends FindPic {
 			throw new IllegalArgumentException("xCount/yCount必须是有效地的等分数。 大于等于零，并小于其方向的像素数");
 		}
 		int x = index % xCount;
-		int y = (index - x) / xCount; // new Double(Math.floor(index / yCount)).intValue();
+		int y = (index - x) / xCount; // new Double(Math.floor(index /
+										// yCount)).intValue();
 
 		int xOffset = width / xCount;
 
@@ -113,11 +118,48 @@ public class FindPicOperation extends FindPic {
 
 	/** 在一个指定起点和长宽的范围内查找图片 */
 	public int[] findPicByOffset(String bmp, PixelPoint original, int areaWidth, int areaHeight) {
-		return this.findPic(original.x, original.y, original.x + areaWidth, original.y + areaHeight, bmp, "000000", SIMILARITY, 0);
+		return this.findPic(original.x, original.y, original.x + areaWidth, original.y + areaHeight, bmp, "000000",
+				SIMILARITY, 0);
 	}
 
 	/** 在一个长方形范围内查找图片 */
 	public int[] findPicByOffset(String bmp, Rectangle r) {
 		return this.findPic(r.x, r.y, r.x + r.width, r.y + r.height, bmp, "000000", SIMILARITY, 0);
+	}
+
+	/** 等待某个图片被找到，除非超时。超时未找到返回false */
+	public boolean waitUntilPicLoaded(String bmp, Rectangle r, int waiting, TimeUnit u) {
+		return waitUntilPicLoaded(bmp, r.getLocation(), r.width, r.height, waiting, u);
+	}
+
+	/** 等待某个界面被找到，除非超时。超时未找到返回false */
+	public boolean waitUntilPicLoaded(String bmp, Point original, int areaWidth, int areaHeight, int waiting,
+			TimeUnit u) {
+		// 换算成毫秒的等待时间
+		final long ms = u.toMillis(waiting);
+
+		// 休眠的间隔规则：一般尝试10次，但是时间超过10秒的话会每秒尝试，间隔最断为10毫秒
+		final long sleeMs = Math.min(1000, ms > 100 ? ms / 10 : 10);
+
+		final long start = System.currentTimeMillis();
+
+		boolean found = false;
+
+		while (!found && System.currentTimeMillis() - start < ms) {
+			int[] result = findPic(original.x, original.y, original.x + areaWidth, original.y + areaHeight, bmp,
+					"000000", SIMILARITY, 0);
+			found = result != null && result.length > 0 && result[0] > -1;
+
+			if (found) {
+				break;
+			}
+			try {
+				Thread.sleep(sleeMs, (int) (Math.random() * 100));
+			} catch (InterruptedException e) {
+				logger.error("", e);
+			}
+		}
+
+		return found;
 	}
 }

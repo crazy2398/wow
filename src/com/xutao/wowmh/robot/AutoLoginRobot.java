@@ -50,8 +50,8 @@ public class AutoLoginRobot extends AbstractRobot {
 		kbOp.enter();
 
 		// 将鼠标移开屏幕中央，防止鼠标附近的颜色影响选择
-		getMouseOp().mouseMoveTo((int)(100*Math.random()), (int)(100*Math.random()));
-		
+		getMouseOp().mouseMoveTo((int) (100 * Math.random()), (int) (100 * Math.random()));
+
 		FindStrOperation findStr = new FindStrOperation(getComWrapper(), ComWrapper.ROLE_LIST_DICT);
 
 		final int RERTY_LIMIT = 30;
@@ -84,7 +84,7 @@ public class AutoLoginRobot extends AbstractRobot {
 			if (isPicFound(result)) {
 				logger.info("在第" + (RERTY_LIMIT - retryTimes) + "次识别时时成功发现多账号待选");
 				// 选定指定账号
-				int accResult[] = findStr.findStrCenter(account, "DCAF12-233213", 205, 225);
+				int accResult[] = findStr.findStrCenter(account, TITLE_COLOR, 205, 225);
 				if (clickPictureIfFound(accResult)) {
 					logger.info("成功选中账号" + account);
 					sleep(500, TimeUnit.MILLISECONDS);
@@ -150,6 +150,11 @@ public class AutoLoginRobot extends AbstractRobot {
 			hwnd = winOp.findWindow(0, null, WINDOW_TITLE);
 			lodingRetry++;
 		}
+
+		if (hwnd > 0) {
+			getFindPicOp().f
+		}
+
 		return hwnd;
 	}
 
@@ -162,7 +167,8 @@ public class AutoLoginRobot extends AbstractRobot {
 		} else if (isPlaying()) {
 
 			int retryCount = 5;
-			while (!(clicked = clickPictureIfFound(getFindPicOp().findPicCenter("返回角色选择.bmp", 100, 160))) && retryCount-- > 0) {
+			while (!(clicked = clickPictureIfFound(getFindPicOp().findPicCenter("返回角色选择.bmp", 100, 160)))
+					&& retryCount-- > 0) {
 				getKeyboardOp().escape();
 				sleep(500, TimeUnit.MILLISECONDS);
 			}
@@ -182,7 +188,8 @@ public class AutoLoginRobot extends AbstractRobot {
 		boolean clicked = false;
 		if (isPlaying()) {
 			int retryCount = 5;
-			while (!(clicked = clickPictureIfFound(getFindPicOp().findPicCenter("退出游戏.bmp", 100, 160))) && retryCount-- > 0) {
+			while (!(clicked = clickPictureIfFound(getFindPicOp().findPicCenter("退出游戏.bmp", 100, 160)))
+					&& retryCount-- > 0) {
 				getKeyboardOp().escape();
 				sleep(500, TimeUnit.MILLISECONDS);
 			}

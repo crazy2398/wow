@@ -16,11 +16,13 @@ import com.xutao.wowmh.op.ColorOperation;
 import com.xutao.wowmh.op.FindPicOperation;
 import com.xutao.wowmh.op.KeyboardOperation;
 import com.xutao.wowmh.op.MouseOperation;
-
+//http://cl.m7y.xyz
 public class AbstractRobot {
 	private static final Logger logger = LogManager.getLogger(AbstractRobot.class);
 	private final ComWrapper com;
 
+	public static final String TITLE_COLOR = "EEB900-110E00";
+	
 	private final Sleep sleep = new Sleep(); // 延迟等待类
 
 	public ComWrapper getComWrapper() {
@@ -160,8 +162,8 @@ public class AbstractRobot {
 		return isPicFound(getFindPicOp().findPicByIndex("工具栏装饰.bmp", 3, 12, 33));
 	}
 
-	/** 是否正在战斗 */
-	public boolean isFighting() {
-		return isPicFound(getFindPicOp().findPicByIndex("头像战斗中.bmp", 10, 8, 0));
-	}
+//	/** 是否正在战斗 */
+//	public boolean isFighting() {
+//		return isPicFound(getFindPicOp().findPicByIndex("头像战斗中.bmp", 10, 8, 0));
+//	}
 }
