@@ -53,6 +53,16 @@ public class AbastractRole extends AbstractRobot {
 	public boolean isRiding(){
 		return false;
 	}
+
+	/** 是否在乘坐旅行服务 */ 
+	public boolean isOnTaxi() {
+		return false;
+	}
+
+	/** 获取包中的可用栏位数量 */ 
+	public int getSpareBagCount() {
+		return 0;
+	}
 	
 	/** 开始攻击 */ 
 	public void target(){

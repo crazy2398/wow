@@ -51,7 +51,7 @@ public class RouteRobotTest {
 
 			AutoLoginRobot loginRobot = new AutoLoginRobot(com);
 
-			Assert.assertTrue(loginRobot.startGame("43948294@qq.com", "crazy2398", "WoW3"));
+			Assert.assertTrue(loginRobot.startGame("43948294@qq.com", "crazy2398", "WoW1"));
 
 			SelectRoleByLevelRobot roleRobot = new SelectRoleByLevelRobot(com);
 
@@ -81,6 +81,60 @@ public class RouteRobotTest {
 			}
 			loginRobot.exitGame();
 
+		}
+	}
+
+	@Test
+	/** 尝试计算平移鼠标多少像素可以使角色旋转一周 */
+	public void testToCompute360() {
+		try (ComWrapper com = new ComWrapper("H:\\eclipse-workspace\\WoW\\dmres")) {
+
+			Assert.assertTrue(com.isCreateSuccess());
+
+			AutoLoginRobot loginRobot = new AutoLoginRobot(com);
+
+			Assert.assertTrue(loginRobot.startGame("43948294@qq.com", "crazy2398", "WoW1"));
+
+			SelectRoleByLevelRobot roleRobot = new SelectRoleByLevelRobot(com);
+
+			List<Role> allRoles = roleRobot.getRoles(null, null, null, null);
+
+			Assert.assertTrue(allRoles != null && allRoles.size() > 0);
+
+			Assert.assertTrue(roleRobot.enterGame(allRoles.get(0)));
+
+			RouteRobot routeRobot = new RouteRobot(com);
+
+			// 重置鼠标位置
+			routeRobot.getMouseOp().mouseMoveToArea(200, 200, 100, 100);
+
+			for (int i = 0; i < 	
+							10; i++) {
+				testAction(com, routeRobot);
+			}
+
+			loginRobot.exitGame();
+
+		}
+	}
+
+	public void testAction(ComWrapper com, RouteRobot routeRobot) {
+		int width = com.getSystemUtilOp().getScreenWidth();
+
+		double base = routeRobot.getCurrentOrientation();
+		for (int i = 200; i < width; i++) {
+			routeRobot.getMouseOp().rightDown();
+			routeRobot.sleep(50);
+			routeRobot.getMouseOp().mouseMoveRelative(i, 0);
+			routeRobot.sleep(50);
+			routeRobot.getMouseOp().rightUp();
+			routeRobot.sleep(400);
+			double end = routeRobot.getCurrentOrientation();
+
+			if (Math.abs(end - base) < 0.1) {
+				System.err.println("在i=" + i + "时，发现了角度一致");
+			}
+			base = end;
 		}
 	}
 }

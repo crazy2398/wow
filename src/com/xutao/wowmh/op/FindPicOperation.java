@@ -24,7 +24,7 @@ public class FindPicOperation extends FindPic {
 		this.com = com;
 	}
 
-	private boolean debug = false;
+	private boolean debug = true;
 
 	/**
 	 * 查找图片，返回找到的第一个图片的坐标
@@ -54,8 +54,7 @@ public class FindPicOperation extends FindPic {
 	 *         <li>int[1]:找到的图像的x坐标
 	 *         <li>int[2]:找到的图像的y坐标
 	 */
-	public int[] findPic(int xStart, int yStart, int xEnd, int yEnd, String pic, String deviationColor, double sim,
-			int order) {
+	public int[] findPic(int xStart, int yStart, int xEnd, int yEnd, String pic, String deviationColor, double sim, int order) {
 
 		if (logger.isDebugEnabled() && debug) {
 			String name = StringUtils.split(pic, ".")[0];
@@ -68,8 +67,7 @@ public class FindPicOperation extends FindPic {
 	public int[] findPicCenter(String bmp, int xOffset, int yOffset, int mode) {
 		int centerX = java.awt.Toolkit.getDefaultToolkit().getScreenSize().width / 2;
 		int centerY = java.awt.Toolkit.getDefaultToolkit().getScreenSize().height / 2;
-		return this.findPic(centerX - xOffset, centerY - yOffset, centerX + xOffset, centerY + yOffset, bmp, "000000",
-				SIMILARITY, mode);
+		return this.findPic(centerX - xOffset, centerY - yOffset, centerX + xOffset, centerY + yOffset, bmp, "000000", SIMILARITY, mode);
 	}
 
 	/** 已默认方式从屏幕中央找图 */
@@ -117,9 +115,8 @@ public class FindPicOperation extends FindPic {
 	}
 
 	/** 在一个指定起点和长宽的范围内查找图片 */
-	public int[] findPicByOffset(String bmp, PixelPoint original, int areaWidth, int areaHeight) {
-		return this.findPic(original.x, original.y, original.x + areaWidth, original.y + areaHeight, bmp, "000000",
-				SIMILARITY, 0);
+	public int[] findPicByOffset(String bmp, Point original, int areaWidth, int areaHeight) {
+		return this.findPic(original.x, original.y, original.x + areaWidth, original.y + areaHeight, bmp, "000000", SIMILARITY, 0);
 	}
 
 	/** 在一个长方形范围内查找图片 */
@@ -133,8 +130,7 @@ public class FindPicOperation extends FindPic {
 	}
 
 	/** 等待某个界面被找到，除非超时。超时未找到返回false */
-	public boolean waitUntilPicLoaded(String bmp, Point original, int areaWidth, int areaHeight, int waiting,
-			TimeUnit u) {
+	public boolean waitUntilPicLoaded(String bmp, Point original, int areaWidth, int areaHeight, int waiting, TimeUnit u) {
 		// 换算成毫秒的等待时间
 		final long ms = u.toMillis(waiting);
 
@@ -146,8 +142,7 @@ public class FindPicOperation extends FindPic {
 		boolean found = false;
 
 		while (!found && System.currentTimeMillis() - start < ms) {
-			int[] result = findPic(original.x, original.y, original.x + areaWidth, original.y + areaHeight, bmp,
-					"000000", SIMILARITY, 0);
+			int[] result = findPicByOffset(bmp, original, areaWidth, areaHeight);
 			found = result != null && result.length > 0 && result[0] > -1;
 
 			if (found) {

@@ -35,7 +35,7 @@ public class MouseOperation {
 			} else {
 				result = com.getActiveXComponent().getDm().invoke(method);
 			}
-			logger.debug("调用[" + method + "]的结果是:" + String.valueOf(result));
+			//logger.debug("调用[" + method + "]的结果是:" + String.valueOf(result));
 
 		} catch (Exception e) {
 			logger.error("调用[" + method + "]失败", e);

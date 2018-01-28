@@ -1,5 +1,6 @@
 package com.xutao.wowmh.robot;
 
+import java.awt.Rectangle;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.logging.log4j.LogManager;
@@ -152,7 +153,8 @@ public class AutoLoginRobot extends AbstractRobot {
 		}
 
 		if (hwnd > 0) {
-			getFindPicOp().f
+			Rectangle r = new Rectangle(0, 0, getSystemUtilOp().getScreenWidth(), getSystemUtilOp().getScreenHeight());
+			getFindPicOp().waitUntilPicLoaded("按钮.bmp", r, 30, TimeUnit.SECONDS);
 		}
 
 		return hwnd;
@@ -167,8 +169,7 @@ public class AutoLoginRobot extends AbstractRobot {
 		} else if (isPlaying()) {
 
 			int retryCount = 5;
-			while (!(clicked = clickPictureIfFound(getFindPicOp().findPicCenter("返回角色选择.bmp", 100, 160)))
-					&& retryCount-- > 0) {
+			while (!(clicked = clickPictureIfFound(getFindPicOp().findPicCenter("返回角色选择.bmp", 100, 160))) && retryCount-- > 0) {
 				getKeyboardOp().escape();
 				sleep(500, TimeUnit.MILLISECONDS);
 			}
@@ -188,8 +189,7 @@ public class AutoLoginRobot extends AbstractRobot {
 		boolean clicked = false;
 		if (isPlaying()) {
 			int retryCount = 5;
-			while (!(clicked = clickPictureIfFound(getFindPicOp().findPicCenter("退出游戏.bmp", 100, 160)))
-					&& retryCount-- > 0) {
+			while (!(clicked = clickPictureIfFound(getFindPicOp().findPicCenter("退出游戏.bmp", 100, 160))) && retryCount-- > 0) {
 				getKeyboardOp().escape();
 				sleep(500, TimeUnit.MILLISECONDS);
 			}
