@@ -8,6 +8,7 @@ import org.junit.Test;
 
 import com.xutao.wowmh.core.ComWrapper;
 import com.xutao.wowmh.core.PixelPoint;
+import com.xutao.wowmh.op.MouseOperation;
 
 public class RouteRobotTest {
 	@Test
@@ -108,9 +109,9 @@ public class RouteRobotTest {
 			// 重置鼠标位置
 			routeRobot.getMouseOp().mouseMoveToArea(200, 200, 100, 100);
 
-			for (int i = 0; i < 	
-							10; i++) {
-				testAction(com, routeRobot);
+			for (int i = 1; i < 20; i++) {
+				// testAction2(com, routeRobot);
+				testAction(com, routeRobot, i);
 			}
 
 			loginRobot.exitGame();
@@ -118,23 +119,59 @@ public class RouteRobotTest {
 		}
 	}
 
-	public void testAction(ComWrapper com, RouteRobot routeRobot) {
-		int width = com.getSystemUtilOp().getScreenWidth();
-
+	// public void testAction(ComWrapper com, RouteRobot routeRobot) {
+	// int width = com.getSystemUtilOp().getScreenWidth();
+	//
+	// double base = routeRobot.getCurrentOrientation();
+	// for (int i = 200; i < width / 2; i++) {
+	// routeRobot.getMouseOp().rightDown();
+	// routeRobot.sleep(50);
+	// routeRobot.getMouseOp().mouseMoveRelative(i, 0);
+	// routeRobot.sleep(50);
+	// routeRobot.getMouseOp().rightUp();
+	// routeRobot.sleep(400);
+	// double end = routeRobot.getCurrentOrientation();
+	//
+	// if (Math.abs(end - base) < 0.1) {
+	// System.err.println("在i=" + i + "时，发现了角度一致");
+	// }
+	// base = end;
+	// }
+	// }
+	public void testAction(ComWrapper com, RouteRobot routeRobot, int offset) {
 		double base = routeRobot.getCurrentOrientation();
-		for (int i = 200; i < width; i++) {
-			routeRobot.getMouseOp().rightDown();
-			routeRobot.sleep(50);
-			routeRobot.getMouseOp().mouseMoveRelative(i, 0);
-			routeRobot.sleep(50);
-			routeRobot.getMouseOp().rightUp();
-			routeRobot.sleep(400);
+		final int COUNT = 360;
+		int validCount = 0;
+		double diff = 0.0d;
+		for (int i = 0; i < COUNT; i++) {
+			mouseMove(routeRobot, offset * 5, 50);
 			double end = routeRobot.getCurrentOrientation();
 
-			if (Math.abs(end - base) < 0.1) {
-				System.err.println("在i=" + i + "时，发现了角度一致");
+			if (Math.abs(end - base) > 0.1) {
+				validCount++;
+
+				if (end < base && base - end >= 90) {
+					end += 360;
+				}
+				diff += end - base;
 			}
 			base = end;
 		}
+		System.err.println(String.format("[偏移=%d][%d/%d=%2.2f%%]平均角度差为%3.4f", offset, validCount, COUNT, 100d * validCount / COUNT,
+						diff / validCount));
 	}
+
+	/**
+	 * @param routeRobot
+	 */
+	private void mouseMove(RouteRobot routeRobot, int offset, int interval) {
+		MouseOperation mouseOp = routeRobot.getMouseOp();
+		mouseOp.rightDown();
+		routeRobot.sleep(interval);
+		mouseOp.mouseMoveRelative(offset, 0);
+		routeRobot.sleep(interval);
+		mouseOp.rightUp();
+		routeRobot.sleep(1000);
+	}
+
 }

@@ -1,6 +1,6 @@
 package com.xutao.wowmh.robot;
 
-public enum BusiTechnique {
+public enum Professions {
 	/** 锻造 */
 	BLACKSMITHING(false),
 	/** 炼金 */
@@ -32,7 +32,7 @@ public enum BusiTechnique {
 	/** 是否为采集 */
 	private final boolean collecting;
 
-	private BusiTechnique(boolean collecting) {
+	private Professions(boolean collecting) {
 		this.collecting = collecting;
 	}
 

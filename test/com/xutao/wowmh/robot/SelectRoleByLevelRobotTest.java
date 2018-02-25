@@ -71,25 +71,25 @@ public class SelectRoleByLevelRobotTest {
 						// 
 						null,
 						//
-						new Role(null, Profession.Brave, null, 1),
+						new Role(null, Classes.Brave, null, 1),
 						//
-						new Role(null, Profession.Monk, null, 12),
+						new Role(null, Classes.Monk, null, 12),
 						//
-						new Role(null, Profession.Bandit, null, 13),
+						new Role(null, Classes.Rogue, null, 13),
 						//
-						new Role(null, Profession.Priest, null, 14),
+						new Role(null, Classes.Priest, null, 14),
 						//
-						new Role(null, Profession.Hunter, null, 15),
+						new Role(null, Classes.Hunter, null, 15),
 						//
-						new Role(null, Profession.Druid, null, 16),
+						new Role(null, Classes.Druid, null, 16),
 						//
-						new Role(null, Profession.Shaman, null, 110),
+						new Role(null, Classes.Shaman, null, 110),
 						//
-						new Role(null, Profession.Mage, null, 103),
+						new Role(null, Classes.Mage, null, 103),
 						//
-						new Role(null, Profession.Warlock, null, 15),
+						new Role(null, Classes.Warlock, null, 15),
 						//
-						new Role(null, Profession.Paladin, null, 16),
+						new Role(null, Classes.Paladin, null, 16),
 						//
 						null };
 
@@ -98,7 +98,7 @@ public class SelectRoleByLevelRobotTest {
 			if (expected[i] == null) {
 				Assert.assertNull(r);
 			} else {
-				Assert.assertEquals(expected[i].getProfession(), r.getProfession());
+				Assert.assertEquals(expected[i].getWowClass(), r.getWowClass());
 				Assert.assertEquals(expected[i].getLevel(), r.getLevel());
 			}
 		}

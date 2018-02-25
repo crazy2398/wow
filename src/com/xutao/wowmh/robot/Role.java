@@ -4,17 +4,17 @@ import java.awt.Point;
 
 public class Role {
 	private final String name;
-	private final Profession profession;
-	private final Phyle Phyle;
+	private final Classes wowClass;
+	private final Race race;
 	private int level;
 	private String zone;
 
 	private Point screenPosition;
 	
-	public Role(String name, Profession profession, Phyle phyle, int level) {
+	public Role(String name, Classes profession, Race race, int level) {
 		this.name = name;
-		this.profession = profession;
-		this.Phyle = phyle;
+		this.wowClass = profession;
+		this.race = race;
 		this.level = level;
 	}
 
@@ -38,12 +38,12 @@ public class Role {
 		return name;
 	}
 
-	public Profession getProfession() {
-		return profession;
+	public Classes getWowClass() {
+		return wowClass;
 	}
 
-	public Phyle getPhyle() {
-		return Phyle;
+	public Race getRace() {
+		return race;
 	}
 
 	public Point getScreenPosition() {

@@ -26,7 +26,7 @@ public class SelectRoleByLevelRobot extends AbstractRobot {
 	/** 当前的角色最高等级 */
 	private static final int FULL_LEVEL = 110;
 
-	public List<Role> getFullLevel(Profession prof) {
+	public List<Role> getFullLevel(Classes prof) {
 		return getRoles(null, prof, null, FULL_LEVEL);
 	}
 
@@ -44,7 +44,7 @@ public class SelectRoleByLevelRobot extends AbstractRobot {
 	 *            指定最低等级
 	 * @return 返回满足条件的角色
 	 */
-	public List<Role> getRoles(String name, Profession prof, Phyle phyle, Integer minLevel) {
+	public List<Role> getRoles(String name, Classes prof, Race phyle, Integer minLevel) {
 		List<Role> allRoles = loadAllRoles();
 		List<Role> target = new ArrayList<>(allRoles.size());
 
@@ -52,10 +52,10 @@ public class SelectRoleByLevelRobot extends AbstractRobot {
 			if (!StringUtils.isEmpty(name) && !StringUtils.equals(name, role.getName())) {
 				continue;
 			}
-			if (prof != null && !prof.equals(role.getProfession())) {
+			if (prof != null && !prof.equals(role.getWowClass())) {
 				continue;
 			}
-			if (phyle != null && !phyle.equals(role.getPhyle())) {
+			if (phyle != null && !phyle.equals(role.getRace())) {
 				continue;
 			}
 			if (minLevel != null && role.getLevel() < minLevel) {
@@ -133,7 +133,7 @@ public class SelectRoleByLevelRobot extends AbstractRobot {
 		}
 
 		getComWrapper().getMouseOp().leftClick(p);
-		logger.info("已经选定等级[" + role.getLevel() + "]角色[" + role.getProfession() + "]");
+		logger.info("已经选定等级[" + role.getLevel() + "]角色[" + role.getWowClass() + "]");
 		sleep(500);
 
 		// if (getComWrapper().getMouseOp().doubleClick(p)) {
@@ -171,12 +171,12 @@ public class SelectRoleByLevelRobot extends AbstractRobot {
 
 		int level = 0;
 
-		Profession p = null;
+		Classes p = null;
 
 		Matcher matcher = pattern.matcher(str);
 		if (matcher.matches()) {
 			level = Integer.valueOf(matcher.group(2));
-			p = Profession.byAnyWords(matcher.group(3));
+			p = Classes.byAnyWords(matcher.group(3));
 		}
 
 		return new Role(name, p, null, level);

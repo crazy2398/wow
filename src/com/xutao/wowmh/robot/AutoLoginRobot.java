@@ -154,7 +154,7 @@ public class AutoLoginRobot extends AbstractRobot {
 
 		if (hwnd > 0) {
 			Rectangle r = new Rectangle(0, 0, getSystemUtilOp().getScreenWidth(), getSystemUtilOp().getScreenHeight());
-			getFindPicOp().waitUntilPicLoaded("按钮.bmp", r, 30, TimeUnit.SECONDS);
+			getFindPicOp().waitUntilPicLoaded("登录.bmp", r, 30, TimeUnit.SECONDS);
 		}
 
 		return hwnd;

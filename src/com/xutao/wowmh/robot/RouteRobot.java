@@ -79,9 +79,10 @@ public class RouteRobot extends AbstractRobot {
 			logger.debug(original);
 		}
 
-		PixelPoint outermost = getOutermostPoint(original, "CECBCD-2C2C2E");
+		// PixelPoint outermost = getOutermostPoint(original, "CECBCD-2C2C2E");
 		// PixelPoint outermost = getOutermostPoint(original, "C9C7CA-2e3035");
 		// PixelPoint outermost = getOutermostPoint(original, "272444-090805");
+		PixelPoint outermost = getOutermostPoint(original, "DBD9DC-100F11");
 		return getAngle(original, outermost);
 	}
 
@@ -95,7 +96,5 @@ public class RouteRobot extends AbstractRobot {
 
 		return brng < 0 ? brng + 360 : brng;
 	}
-	
-	
-	
+
 }

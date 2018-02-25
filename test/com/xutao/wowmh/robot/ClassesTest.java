@@ -11,12 +11,12 @@ import org.junit.runners.Parameterized.Parameters;
 
 
 @RunWith(Parameterized.class)
-public class ProfessionTest {
+public class ClassesTest {
 	private final String testTarget;
 
-	private final Profession expecting;
+	private final Classes expecting;
 
-	public ProfessionTest(String testTarget, Profession expecting) {
+	public ClassesTest(String testTarget, Classes expecting) {
 		this.testTarget = testTarget;
 		this.expecting = expecting;
 	}
@@ -25,24 +25,24 @@ public class ProfessionTest {
     public static Collection<?> usernameData() {  
   
         return Arrays.asList(new Object[][] {
-        	{ "潜行者",  Profession.Bandit},
-        	{ "潜",  Profession.Bandit},
-        	{ "行者",  Profession.Bandit},
-        	{ "潜abc",  Profession.Bandit},
-        	{ "a行者",  Profession.Bandit},
+        	{ "潜行者",  Classes.Rogue},
+        	{ "潜",  Classes.Rogue},
+        	{ "行者",  Classes.Rogue},
+        	{ "潜abc",  Classes.Rogue},
+        	{ "a行者",  Classes.Rogue},
         	{ "",  null},
         	{ null,  null},
         	{ "12345",  null},
         	{ "猎",  null},
-        	{ "猎人",  Profession.Hunter},
-        	{ "死亡骑士",  Profession.DeathKnight},
-        	{ "圣骑士",  Profession.Paladin},
+        	{ "猎人",  Classes.Hunter},
+        	{ "死亡骑士",  Classes.DeathKnight},
+        	{ "圣骑士",  Classes.Paladin},
         	{ "骑士",  null},
-        	{ "牧师",  Profession.Priest},
-        	{ "牧",  Profession.Priest},
-        	{ "战",  Profession.Brave},
-        	{ "法",  Profession.Mage},
-        	{ "术",  Profession.Warlock},
+        	{ "牧师",  Classes.Priest},
+        	{ "牧",  Classes.Priest},
+        	{ "战",  Classes.Brave},
+        	{ "法",  Classes.Mage},
+        	{ "术",  Classes.Warlock},
         	{ "士",  null},
         	{ "师",  null}
         	
@@ -52,7 +52,7 @@ public class ProfessionTest {
     
     @Test  
     public void byAnyWordsTest() { 
-    	Assert .assertSame(expecting, Profession.byAnyWords(testTarget));
+    	Assert .assertSame(expecting, Classes.byAnyWords(testTarget));
     }
     
 }
