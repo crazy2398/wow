@@ -1,4 +1,4 @@
-package com.xutao.wowmh.robot;
+package com.xutao.wowmh.concept.role;
 
 /** 魔兽世界的阵营 */
 public enum Camp {

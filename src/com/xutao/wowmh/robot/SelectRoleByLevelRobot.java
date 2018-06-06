@@ -11,6 +11,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.xutao.wowmh.concept.role.Classes;
+import com.xutao.wowmh.concept.role.Race;
 import com.xutao.wowmh.core.ComWrapper;
 import com.xutao.wowmh.core.PixelPoint;
 import com.xutao.wowmh.op.FindStrOperation;

@@ -44,7 +44,7 @@ public class ComWrapper extends Com implements Closeable {
 	private final FindPicOperation findPicOp = new FindPicOperation(this);
 
 	/** 实时截图的工具，用来调试 */
-	private final ScreenshotCatcher printScreen = new ScreenshotCatcher("H:\\test", 256);
+	private final ScreenshotCatcher printScreen = new ScreenshotCatcher("D:\\test", 256);
 
 	public ComWrapper() {
 		this(null);

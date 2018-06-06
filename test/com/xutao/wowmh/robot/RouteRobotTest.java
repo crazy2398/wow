@@ -46,7 +46,7 @@ public class RouteRobotTest {
 
 	@Test
 	public void testMain() {
-		try (ComWrapper com = new ComWrapper("H:\\eclipse-workspace\\WoW\\dmres")) {
+		try (ComWrapper com = new ComWrapper("D:\\Users\\xutao\\git\\wow\\dmres")) {
 
 			Assert.assertTrue(com.isCreateSuccess());
 

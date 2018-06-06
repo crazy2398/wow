@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Configuration status="WARN" monitorInterval="300">  
     <properties>  
-        <property name="LOG_HOME">H:/logs</property>  
-        <property name="FILE_NAME">mylog</property>  
+        <property name="LOG_HOME">d:/logs</property>  
+        <property name="FILE_NAME">wowlog</property>  
     </properties>  
     <Appenders>  
         <Console name="Console" target="SYSTEM_OUT">  

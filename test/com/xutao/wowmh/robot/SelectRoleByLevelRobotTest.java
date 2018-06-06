@@ -6,12 +6,13 @@ import java.util.List;
 import org.junit.Assert;
 import org.junit.Test;
 
+import com.xutao.wowmh.concept.role.Classes;
 import com.xutao.wowmh.core.ComWrapper;
 
 public class SelectRoleByLevelRobotTest {
 	@Test
 	public void testLogin() {
-		try (ComWrapper com = new ComWrapper("H:\\eclipse-workspace\\WoW\\dmres")) {
+		try (ComWrapper com = new ComWrapper("D:\\Users\\xutao\\git\\wow\\dmres")) {
 
 			Assert.assertTrue(com.isCreateSuccess());
 

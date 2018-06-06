@@ -9,7 +9,7 @@ public class AutoLoginRobotTest {
 	
 	@Test
 	public void testLogin() {
-		try (ComWrapper com = new ComWrapper("H:\\eclipse-workspace\\WoW\\dmres")) {
+		try (ComWrapper com = new ComWrapper("D:\\Users\\xutao\\git\\wow\\dmres")) {
 
 			Assert.assertTrue(com.isCreateSuccess()); 
 									
@@ -24,7 +24,7 @@ public class AutoLoginRobotTest {
 	
 	@Test
 	public void testLoginFail() {
-		try (ComWrapper com = new ComWrapper("H:\\eclipse-workspace\\WoW\\dmres")) {
+		try (ComWrapper com = new ComWrapper("D:\\Users\\xutao\\git\\wow\\dmres")) {
 
 			Assert.assertTrue(com.isCreateSuccess()); 
 						

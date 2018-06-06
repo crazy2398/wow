@@ -1,4 +1,4 @@
-package com.xutao.wowmh.robot;
+package com.xutao.wowmh.concept.role;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;

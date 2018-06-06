@@ -1,4 +1,4 @@
-package com.xutao.wowmh.robot;
+package com.xutao.wowmh.concept.role;
 
 public enum Professions {
 	/** 锻造 */

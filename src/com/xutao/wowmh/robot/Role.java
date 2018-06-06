@@ -2,6 +2,9 @@ package com.xutao.wowmh.robot;
 
 import java.awt.Point;
 
+import com.xutao.wowmh.concept.role.Classes;
+import com.xutao.wowmh.concept.role.Race;
+
 public class Role {
 	private final String name;
 	private final Classes wowClass;
