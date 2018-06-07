@@ -6,6 +6,10 @@ import com.xutao.wowmh.concept.role.Classes;
 import com.xutao.wowmh.concept.role.Race;
 
 public class Role {
+
+	/** 当前的角色最高等级 */
+	public static final int FULL_LEVEL = 110;
+	
 	private final String name;
 	private final Classes wowClass;
 	private final Race race;

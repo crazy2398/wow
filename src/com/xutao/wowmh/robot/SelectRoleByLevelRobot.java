@@ -25,11 +25,8 @@ public class SelectRoleByLevelRobot extends AbstractRobot {
 		super(com);
 	}
 
-	/** 当前的角色最高等级 */
-	private static final int FULL_LEVEL = 110;
-
 	public List<Role> getFullLevel(Classes prof) {
-		return getRoles(null, prof, null, FULL_LEVEL);
+		return getRoles(null, prof, null, Role.FULL_LEVEL);
 	}
 
 	/**

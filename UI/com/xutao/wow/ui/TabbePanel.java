@@ -23,22 +23,27 @@ public class TabbePanel extends JPanel {
 
 	private ImageIcon icon = createImageIcon("images/middle.gif");
 
+	private T4SettingPanel settingPanel = new T4SettingPanel();
+	
+	private T1DungeonPanel dungeonPanel= new T1DungeonPanel();
+	
 	/** 存放卡片和布局的数据 */
 	private final Map<String, JPanel> tabContents;
 
 	public TabbePanel() {
 		TreeMap<String, JPanel> setting = new TreeMap<>();
-		setting.put("副本", new JPanel());
+		setting.put("副本", dungeonPanel);
 		setting.put("任务", new JPanel());
 		setting.put("技能", new JPanel());
-		setting.put("设置", new JPanel());
+		setting.put("设置", settingPanel);
 		tabContents = Collections.unmodifiableMap(setting);
 
-		layoutComponents();
+		layoutComponents(tabContents);
+		jTabbedpane.setSelectedIndex(3);
 	}
 
-	private void layoutComponents() {
-		for (Map.Entry<String, JPanel> e : tabContents.entrySet()) {
+	private void layoutComponents(Map<String, JPanel> setting) {
+		for (Map.Entry<String, JPanel> e : setting.entrySet()) {
 			jTabbedpane.addTab(e.getKey(), icon, e.getValue());
 		}
 		setLayout(new GridLayout(1, 1));

@@ -3,7 +3,7 @@ package com.xutao.wowmh.robot.zone;
 import com.xutao.wowmh.concept.zone.Landmass;
 import com.xutao.wowmh.concept.zone.ZoneType;
 
-public final class Zone {
+public final class Zone implements Comparable<Zone> {
 
 	/** 区域ID */
 	private final int zoneId;
@@ -194,6 +194,17 @@ public final class Zone {
 
 	public Landmass getLandmass() {
 		return landmass;
+	}
+
+	@Override
+	public int compareTo(Zone arg0) {
+		int x = ((Zone) arg0).zoneId;
+		return Integer.valueOf(zoneId).compareTo(x);
+	}
+
+	@Override
+	public String toString() {
+		return name + "#" + zoneId;
 	}
 
 }
